@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gold Desk — Trading Study Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #14130f;
+    --surface: #1c1a15;
+    --surface-2: #262319;
+    --border: #38332788;
+    --border-strong: #46402f;
+    --text: #eae6da;
+    --text-muted: #948d7c;
+    --text-faint: #625c4c;
+    --gold: #c9a24b;
+    --gold-dim: #8a7238;
+    --green: #6f9c80;
+    --red: #ac6152;
+    --radius: 3px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  h1, h2, h3 { font-family: 'Fraunces', serif; font-weight: 500; margin: 0; }
+
+  .num { font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; }
+
+  a { color: inherit; }
+
+  button {
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    border: 1px solid var(--border-strong);
+    background: var(--surface-2);
+    color: var(--text);
+    border-radius: var(--radius);
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+  button:hover { border-color: var(--gold-dim); }
+  button:focus-visible, a:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+  button.primary {
+    background: var(--gold);
+    color: #171410;
+    border-color: var(--gold);
+    font-weight: 600;
+  }
+  button.primary:hover { background: #d9b465; }
+  button:disabled { opacity: 0.4; cursor: default; }
+
+  .app {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 18px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .brand h1 { font-size: 20px; color: var(--gold); }
+  .brand span { font-size: 12px; color: var(--text-faint); }
+
+  .overall-progress {
+    margin: 18px 0 24px;
+    padding: 14px;
+    background: var(--surface-2);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+  .overall-progress .label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+  .overall-progress .figure { font-size: 26px; color: var(--gold); }
+  .bar-track {
+    height: 5px;
+    background: var(--border-strong);
+    border-radius: 3px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.4s ease;
+  }
+
+  .phase {
+    margin-bottom: 6px;
+  }
+  .phase-title {
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: var(--text-faint);
+    padding: 14px 8px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 8px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+  .nav-item:hover { background: var(--surface-2); color: var(--text); }
+  .nav-item.active { background: var(--surface-2); color: var(--text); border-left: 2px solid var(--gold); padding-left: 6px; }
+  .nav-item .week-num { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-faint); width: 20px; flex-shrink: 0; }
+  .nav-item.done .week-num { color: var(--green); }
+  .nav-item.done::after { content: '✓'; margin-left: auto; color: var(--green); font-size: 12px; }
+
+  .nav-item.dashboard-link { margin-bottom: 10px; font-weight: 500; }
+
+  /* ---------- Main ---------- */
+  .main {
+    padding: 40px 48px;
+    max-width: 860px;
+  }
+
+  .eyebrow-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-faint);
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .view h2 { font-size: 30px; margin-bottom: 6px; }
+  .view .subtitle { color: var(--text-muted); margin-bottom: 32px; max-width: 60ch; }
+
+  /* Dashboard cards */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+  .stat-box {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    background: var(--surface);
+  }
+  .stat-box .label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+  .stat-box .value { font-size: 24px; color: var(--gold); }
+
+  .module-list-dash { display: flex; flex-direction: column; gap: 2px; }
+  .module-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .module-row .week-num { font-family: 'IBM Plex Mono', monospace; color: var(--text-faint); font-size: 13px; width: 24px; }
+  .module-row .title { flex: 1; }
+  .module-row .title .m-name { font-size: 15px; }
+  .module-row .title .m-phase { font-size: 12px; color: var(--text-faint); }
+  .module-row .status { font-size: 13px; color: var(--text-muted); }
+  .module-row .status.done { color: var(--green); }
+  .module-row button { padding: 6px 12px; font-size: 13px; }
+
+  /* Lesson view */
+  .lesson-body { color: var(--text); max-width: 68ch; }
+  .lesson-body p { margin: 0 0 16px; }
+  .placeholder-note {
+    border-left: 2px solid var(--gold-dim);
+    padding: 10px 16px;
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: 28px;
+  }
+
+  .lesson-actions { display: flex; gap: 10px; margin: 32px 0; }
+
+  /* Quiz */
+  .quiz-block {
+    border-top: 1px solid var(--border);
+    padding-top: 28px;
+    margin-top: 28px;
+  }
+  .quiz-block h3 { font-size: 18px; margin-bottom: 18px; }
+  .question { margin-bottom: 22px; }
+  .question .q-text { margin-bottom: 10px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 6px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .option:hover { border-color: var(--gold-dim); }
+  .option.selected { border-color: var(--gold); background: var(--surface-2); }
+  .option.correct { border-color: var(--green); background: #1c2620; }
+  .option.incorrect { border-color: var(--red); background: #271c1a; }
+
+  .quiz-result {
+    margin-top: 18px;
+    padding: 14px;
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+  }
+  .quiz-result .score { font-size: 22px; color: var(--gold); }
+
+  .empty-state {
+    padding: 40px 0;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 760px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar {
+      position: relative;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .main { padding: 28px 20px; }
+    .stat-row { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="main" id="main"></main>
+</div>
+
+<script>
+/* =========================================================
+   DATA — this is the part you'll keep editing as we go.
+   Each module = one week. Add lessons/quiz questions here;
+   nothing else in the file needs to change.
+   ========================================================= */
+const CURRICULUM = [
+  { phase: "Month 1 — Market Foundations", weeks: [
+    { id: "w1", title: "How Gold Trades", summary: "Spot gold vs futures, what XAU/USD means, who moves the market.",
+      content: "Placeholder lesson content. This week covers how gold is actually traded — spot market vs futures, what quotes like XAU/USD represent, and the major players (central banks, institutions, retail) that move price.",
+      quiz: [
+        { q: "What does XAU/USD represent?", options: ["Gold priced in US dollars", "A gold mining company stock", "A gold futures expiry date"], correct: 0 },
+        { q: "Which of these typically has the largest influence on gold price?", options: ["Retail traders", "Central bank policy & real yields", "Local jewellery demand alone"], correct: 1 }
+      ]
+    },
+    { id: "w2", title: "Sessions & Timing", summary: "Asian, London, New York sessions — and when gold actually moves.",
+      content: "Placeholder lesson content. This week covers the three major trading sessions, the London/New York overlap, and why gold's most active hours matter for when you choose to trade.",
+      quiz: [
+        { q: "Gold typically sees its highest volatility during:", options: ["The Asian session alone", "The London/New York overlap", "Weekends"], correct: 1 }
+      ]
+    },
+    { id: "w3", title: "Chart Reading Basics", summary: "Candlesticks, timeframes, and reading trend structure.",
+      content: "Placeholder lesson content. This week covers candlestick anatomy, how to pick a timeframe, and how to identify higher-highs/higher-lows trend structure.",
+      quiz: [
+        { q: "A candlestick's wick shows:", options: ["The opening price only", "The high/low range beyond open-close", "The trading volume"], correct: 1 }
+      ]
+    },
+    { id: "w4", title: "Support, Resistance & Key Levels", summary: "Identifying levels price reacts to, and why they matter.",
+      content: "Placeholder lesson content. This week covers how to mark support/resistance, round numbers, and prior highs/lows on a gold chart.",
+      quiz: [
+        { q: "Support is best described as:", options: ["A level price has trouble falling below", "A level price always breaks", "A random price"], correct: 0 }
+      ]
+    }
+  ]},
+  { phase: "Month 2 — One Strategy, Deep", weeks: [
+    { id: "w5", title: "Choosing & Defining Your Strategy", summary: "Pick one framework and write it down as explicit rules.",
+      content: "Placeholder lesson content. This week is about selecting a single strategy approach and defining exact, written entry/exit rules — no ambiguity.",
+      quiz: [] },
+    { id: "w6", title: "Backtesting Fundamentals", summary: "Testing your rules against historical charts before risking money.",
+      content: "Placeholder lesson content. This week covers how to backtest manually on historical gold charts and log results.",
+      quiz: [] },
+    { id: "w7", title: "Entry & Exit Rules", summary: "Tightening your strategy's precise trigger conditions.",
+      content: "Placeholder lesson content.",
+      quiz: [] },
+    { id: "w8", title: "Refining Through Repetition", summary: "Iterating on the strategy using backtest data.",
+      content: "Placeholder lesson content.",
+      quiz: [] }
+  ]},
+  { phase: "Month 3 — Execution & Discipline", weeks: [
+    { id: "w9", title: "Risk Management & Position Sizing", summary: "Protecting capital — the part most traders skip.",
+      content: "Placeholder lesson content. This week covers position sizing, stop placement, and risk-per-trade rules.",
+      quiz: [] },
+    { id: "w10", title: "Demo Trading & Journaling", summary: "Applying the strategy live on demo, with a trade journal.",
+      content: "Placeholder lesson content.",
+      quiz: [] },
+    { id: "w11", title: "Trading Psychology", summary: "Discipline, emotional control, and avoiding revenge trading.",
+      content: "Placeholder lesson content.",
+      quiz: [] },
+    { id: "w12", title: "Review & Path Forward", summary: "Assessing readiness and planning what comes after month three.",
+      content: "Placeholder lesson content.",
+      quiz: [] }
+  ]}
+];
+
+/* =========================================================
+   STATE — progress + quiz scores persisted in localStorage
+   ========================================================= */
+const STORE_KEY = "gold-desk-progress-v1";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    return raw ? JSON.parse(raw) : { completed: {}, scores: {} };
+  } catch (e) {
+    return { completed: {}, scores: {} };
+  }
+}
+function saveState(state) {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+  catch (e) { console.error("Could not save progress", e); }
+}
+
+let state = loadState();
+let currentView = { type: "dashboard" };
+const allWeeks = CURRICULUM.flatMap(p => p.weeks.map(w => ({ ...w, phase: p.phase })));
+
+/* ---------- Sidebar ---------- */
+function renderSidebar() {
+  const done = Object.values(state.completed).filter(Boolean).length;
+  const total = allWeeks.length;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+
+  let html = `
+    <div class="brand"><h1>Gold Desk</h1><span>study platform</span></div>
+    <div class="nav-item dashboard-link ${currentView.type === 'dashboard' ? 'active' : ''}" data-nav="dashboard">Dashboard</div>
+    <div class="overall-progress">
+      <div class="label">Overall progress</div>
+      <div class="figure num">${pct}%</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+    </div>
+  `;
+
+  CURRICULUM.forEach(phase => {
+    html += `<div class="phase"><div class="phase-title">${phase.phase}</div>`;
+    phase.weeks.forEach((w, i) => {
+      const isDone = !!state.completed[w.id];
+      const isActive = currentView.type === "lesson" && currentView.id === w.id;
+      html += `
+        <div class="nav-item ${isDone ? 'done' : ''} ${isActive ? 'active' : ''}" data-nav="lesson" data-id="${w.id}">
+          <span class="week-num">${w.id.replace('w','')}</span>
+          <span>${w.title}</span>
+        </div>`;
+    });
+    html += `</div>`;
+  });
+
+  document.getElementById("sidebar").innerHTML = html;
+
+  document.querySelectorAll("[data-nav]").forEach(el => {
+    el.addEventListener("click", () => {
+      if (el.dataset.nav === "dashboard") {
+        currentView = { type: "dashboard" };
+      } else {
+        currentView = { type: "lesson", id: el.dataset.id };
+      }
+      render();
+      window.scrollTo(0, 0);
+    });
+  });
+}
+
+/* ---------- Dashboard ---------- */
+function renderDashboard() {
+  const done = Object.values(state.completed).filter(Boolean).length;
+  const total = allWeeks.length;
+  const quizzesTaken = Object.keys(state.scores).length;
+  const avgScore = quizzesTaken
+    ? Math.round(Object.values(state.scores).reduce((a, s) => a + (s.correct / s.total), 0) / quizzesTaken * 100)
+    : null;
+
+  let html = `
+    <div class="view">
+      <h2>Your gold trading course</h2>
+      <p class="subtitle">One instrument, one path, twelve weeks. Work through modules in order — each one builds on the last.</p>
+
+      <div class="stat-row">
+        <div class="stat-box"><div class="label">Weeks completed</div><div class="value num">${done} / ${total}</div></div>
+        <div class="stat-box"><div class="label">Quizzes taken</div><div class="value num">${quizzesTaken}</div></div>
+        <div class="stat-box"><div class="label">Average quiz score</div><div class="value num">${avgScore === null ? '—' : avgScore + '%'}</div></div>
+      </div>
+
+      <div class="module-list-dash">
+  `;
+
+  allWeeks.forEach(w => {
+    const isDone = !!state.completed[w.id];
+    html += `
+      <div class="module-row">
+        <span class="week-num">${w.id.replace('w','')}</span>
+        <div class="title">
+          <div class="m-name">${w.title}</div>
+          <div class="m-phase">${w.phase}</div>
+        </div>
+        <span class="status ${isDone ? 'done' : ''}">${isDone ? 'Completed' : 'Not started'}</span>
+        <button data-open="${w.id}">${isDone ? 'Review' : 'Open'}</button>
+      </div>
+    `;
+  });
+
+  html += `</div></div>`;
+  document.getElementById("main").innerHTML = html;
+
+  document.querySelectorAll("[data-open]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentView = { type: "lesson", id: btn.dataset.open };
+      render();
+      window.scrollTo(0, 0);
+    });
+  });
+}
+
+/* ---------- Lesson view ---------- */
+function renderLesson(weekId) {
+  const week = allWeeks.find(w => w.id === weekId);
+  if (!week) { renderDashboard(); return; }
+  const isDone = !!state.completed[week.id];
+  const savedScore = state.scores[week.id];
+
+  let html = `
+    <div class="view">
+      <div class="eyebrow-row">${week.phase} · Week ${week.id.replace('w','')}</div>
+      <h2>${week.title}</h2>
+      <p class="subtitle">${week.summary}</p>
+
+      <div class="placeholder-note">This lesson is a placeholder. Content for this week gets filled in as we go — the structure, progress tracking, and quiz already work end to end.</div>
+
+      <div class="lesson-body"><p>${week.content}</p></div>
+
+      <div class="lesson-actions">
+        <button class="primary" data-mark="${week.id}">${isDone ? 'Mark as not complete' : 'Mark lesson complete'}</button>
+      </div>
+  `;
+
+  if (week.quiz && week.quiz.length) {
+    html += `<div class="quiz-block" id="quiz-block"><h3>Check your understanding</h3>`;
+    week.quiz.forEach((q, qi) => {
+      html += `<div class="question" data-qindex="${qi}"><div class="q-text">${qi + 1}. ${q.q}</div>`;
+      q.options.forEach((opt, oi) => {
+        html += `<div class="option" data-qi="${qi}" data-oi="${oi}">${opt}</div>`;
+      });
+      html += `</div>`;
+    });
+    html += `<button class="primary" id="submit-quiz">Submit answers</button>
+      <div id="quiz-result"></div>
+    </div>`;
+  } else {
+    html += `<div class="quiz-block empty-state">No quiz added for this week yet.</div>`;
+  }
+
+  html += `</div>`;
+  document.getElementById("main").innerHTML = html;
+
+  document.querySelector("[data-mark]").addEventListener("click", () => {
+    state.completed[week.id] = !state.completed[week.id];
+    saveState(state);
+    render();
+  });
+
+  if (week.quiz && week.quiz.length) {
+    const answers = {};
+    document.querySelectorAll(".option").forEach(opt => {
+      opt.addEventListener("click", () => {
+        const qi = opt.dataset.qi;
+        document.querySelectorAll(`.option[data-qi="${qi}"]`).forEach(o => o.classList.remove("selected"));
+        opt.classList.add("selected");
+        answers[qi] = parseInt(opt.dataset.oi);
+      });
+    });
+
+    document.getElementById("submit-quiz").addEventListener("click", () => {
+      let correctCount = 0;
+      week.quiz.forEach((q, qi) => {
+        const chosen = answers[qi];
+        document.querySelectorAll(`.option[data-qi="${qi}"]`).forEach((o, oi) => {
+          if (oi === q.correct) o.classList.add("correct");
+          else if (oi === chosen) o.classList.add("incorrect");
+        });
+        if (chosen === q.correct) correctCount++;
+      });
+      state.scores[week.id] = { correct: correctCount, total: week.quiz.length };
+      saveState(state);
+      const pct = Math.round((correctCount / week.quiz.length) * 100);
+      document.getElementById("quiz-result").innerHTML = `
+        <div class="quiz-result">
+          <div class="score num">${correctCount} / ${week.quiz.length} (${pct}%)</div>
+        </div>`;
+      renderSidebar();
+    });
+  }
+}
+
+/* ---------- Root render ---------- */
+function render() {
+  renderSidebar();
+  if (currentView.type === "dashboard") renderDashboard();
+  else renderLesson(currentView.id);
+}
+
+render();
+</script>
+</body>
+</html>
