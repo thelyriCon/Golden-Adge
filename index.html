@@ -4,8 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Golden Edge — Gold Trading Study Platform</title>
-<!-- LOGO: once you upload your logo image, upload it to your repo as logo.png and this line will pick it up as the browser tab icon -->
-<link rel="icon" href="logo.png" type="image/png">
+<!-- Icons: logo.png (transparent) is used live in the nav bar. The icon files below are
+     separately generated opaque/padded versions — required because browser tabs and iOS
+     home screens render transparent PNGs badly (iOS fills transparency with solid black). -->
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#c17f3e">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -414,6 +420,85 @@
   .float-btn:hover .label { max-width: 160px; opacity: 1; margin-left: 8px; }
   .float-btn svg { flex-shrink: 0; width: 20px; height: 20px; }
 
+  /* ---------- Gold news / fun facts sidebar ---------- */
+  .news-tab {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 99;
+    background: rgba(30,25,15,0.55);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    color: #f3dfae;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-right: none;
+    border-radius: 10px 0 0 10px;
+    padding: 14px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+  }
+  .news-tab svg { width: 16px; height: 16px; writing-mode: horizontal-tb; }
+  .news-tab.hidden { display: none; }
+
+  .news-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 300px;
+    max-width: 84vw;
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    border-left: 1px solid var(--glass-border);
+    box-shadow: -10px 0 32px -14px rgba(120,90,40,0.25);
+    z-index: 98;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 18px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  }
+  .news-sidebar.open { transform: translateX(0); }
+  .news-sidebar-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .news-sidebar-head h3 { font-size: 17px; }
+  .news-sidebar-head button { background: none; border: none; font-size: 22px; line-height: 1; color: var(--text-muted); padding: 0; }
+  .news-sidebar-head button:hover { color: var(--text); }
+
+  .news-list { overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+  .news-item {
+    display: block;
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--glass-border);
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--text);
+  }
+  .news-item:hover { color: var(--accent-dark); }
+  .news-item .src { display: block; font-size: 11px; color: var(--text-faint); margin-top: 4px; }
+  .news-placeholder, .news-error { font-size: 13px; color: var(--text-muted); padding: 10px 4px; line-height: 1.5; }
+  .news-error a { color: var(--accent-dark); font-weight: 600; }
+
+  .fun-fact-block {
+    border-top: 1px solid var(--glass-border);
+    padding-top: 14px;
+    margin-top: 12px;
+  }
+  .fun-fact-label { font-size: 10px; letter-spacing: 0.08em; color: var(--accent-dark); font-weight: 700; margin-bottom: 6px; }
+  .fun-fact-text { font-size: 13px; color: var(--text-muted); line-height: 1.5; min-height: 3.2em; transition: opacity 0.3s ease; }
+
+  @media (max-width: 600px) {
+    .news-tab { top: auto; bottom: 90px; transform: none; }
+  }
+
   /* ================= APP (dashboard / lesson) — reused, re-themed light ================= */
   .app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
   .app-sidebar {
@@ -515,7 +600,7 @@
       <a data-goto="w3">Technical<br>Analysis</a>
       <a data-goto="w9">Risk<br>Management</a>
       <a data-goto="w10">Trading<br>Journal</a>
-      <a href="#">About</a>
+      <a data-goto="about">About</a>
     </div>
     <button class="btn-primary" data-goto="dashboard">Start Learning</button>
     <button class="hamburger-btn" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
@@ -529,7 +614,7 @@
     <a data-goto="w3">Technical Analysis</a>
     <a data-goto="w9">Risk Management</a>
     <a data-goto="w10">Trading Journal</a>
-    <a href="#">About</a>
+    <a data-goto="about">About</a>
     <button class="btn-primary" data-goto="dashboard">Start Learning</button>
   </div>
 
@@ -592,6 +677,48 @@
   </section>
 </div>
 
+<!-- ================= ABOUT PAGE ================= -->
+<div data-page="about" style="display:none;">
+  <nav class="site-nav">
+    <div class="site-brand">
+      <img class="logo-img" id="brand-logo-about" src="logo.png" alt="Golden Edge logo"
+           onerror="this.style.display='none'"
+           onload="this.style.display='block';">
+      <div class="mark" id="brand-mark-about" style="display:none;"><span></span><span></span><span></span></div>
+      <div class="names"><h1>Golden Edge</h1></div>
+    </div>
+    <a data-goto="dashboard" style="font-size:12px;letter-spacing:0.05em;text-transform:uppercase;font-weight:600;color:var(--accent-dark);cursor:pointer;">← Back to home</a>
+  </nav>
+
+  <section class="section" style="max-width:760px;">
+    <div class="section-kicker">ABOUT</div>
+    <h2 style="font-size:34px;margin-bottom:22px;">Golden Edge</h2>
+    <p class="lead" style="margin-bottom:36px;">Golden Edge is a structured study platform for learning gold trading — built on the belief that the hardest part of learning to trade isn't finding information, it's knowing what to learn, in what order, and why.</p>
+
+    <h3 style="font-size:22px;margin-bottom:12px;">Why Golden Edge Exists</h3>
+    <p style="color:var(--text-muted);margin-bottom:30px;">Trading information is everywhere, but structured trading education is much harder to find. A beginner can move from one video to another, one strategy to another, one trader to another — constantly encountering conflicting opinions. The result is often information overload rather than genuine understanding. Golden Edge was built to offer a clearer path: a place where a learner can understand what they need to learn, why it matters, how the concepts connect, how to practice them, and how to test their own understanding — instead of endlessly asking "who should I watch next?"</p>
+
+    <h3 style="font-size:22px;margin-bottom:12px;">The Golden Edge Philosophy</h3>
+    <p style="color:var(--text-muted);margin-bottom:10px;"><em>Don't try to know every market. Learn one market deeply.</em></p>
+    <p style="color:var(--text-muted);margin-bottom:30px;">Golden Edge focuses entirely on gold, not because other markets don't matter, but because specialization builds real understanding. The goal is for a learner to gradually become familiar with how gold behaves, how it reacts to economic events, how different sessions affect it, and what drives XAU/USD — until a gold chart stops looking like random candles and starts looking like something they understand.</p>
+
+    <h3 style="font-size:22px;margin-bottom:12px;">What You'll Learn</h3>
+    <p style="color:var(--text-muted);margin-bottom:30px;">A learning journey that moves from foundations, to understanding gold specifically, to reading charts, to technical analysis, to strategy, to risk management, to psychology — then into practice and testing. Golden Edge is not a signals platform. You won't find "buy here, sell here" calls or promises of guaranteed profits. Any strategies taught are educational frameworks to be studied, practiced and tested — not guaranteed money-making systems. Trading involves real risk, and this platform is built around learning to manage that responsibly.</p>
+
+    <h3 style="font-size:22px;margin-bottom:12px;">Our Vision</h3>
+    <p style="color:var(--text-muted);margin-bottom:30px;">The long-term vision is for Golden Edge to grow into a full educational ecosystem — a place to learn, practice, test yourself, track progress, review concepts, analyze charts, build discipline, and develop your own trading process, one step at a time.</p>
+
+    <h3 style="font-size:22px;margin-bottom:12px;">About the Creator</h3>
+    <p style="color:var(--text-muted);margin-bottom:16px;">Golden Edge was created by <strong>Wangota Jimmy</strong>, known creatively as <strong>iCon</strong> — a graphic designer, songwriter and digital creative with a strong interest in technology, education and creative problem-solving. He has worked in graphic design since 2018, across branding, visual communication, digital design, video editing and creative direction. His approach to creative work is that good design isn't just about looking beautiful — it should communicate an idea, solve a problem, and create an experience. That philosophy shaped Golden Edge as much as the trading curriculum did.</p>
+    <p style="color:var(--text-muted);margin-bottom:30px;">iCon wanted to learn trading seriously, but found the process itself frustrating — too much information, too many teachers, too many conflicting opinions, and no clear answer to "what exactly should I learn, and in what order?" That frustration is what became Golden Edge: an attempt to build the structured, single place he wished he'd had when he started.</p>
+
+    <h3 style="font-size:22px;margin-bottom:12px;">A Message From the Creator</h3>
+    <div class="placeholder-note" style="font-size:15px;font-style:italic;color:var(--text);">
+      "You don't need to know everything before you begin. You need the willingness to learn, the discipline to practice, and the patience to improve. Golden Edge was created to make the journey clearer — one concept, one lesson, one step at a time.<br><br>Learn. Practice. Understand. Improve."
+    </div>
+  </section>
+</div>
+
 <!-- ================= APP (dashboard / lesson) ================= -->
 <div class="app" data-page="app">
   <nav class="app-sidebar" id="sidebar"></nav>
@@ -603,6 +730,25 @@
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="14" width="4" height="7"/><rect x="10" y="9" width="4" height="12"/><rect x="17" y="4" width="4" height="17"/></svg>
   <span class="label">Live Gold Chart ↗</span>
 </a>
+
+<!-- ================= GOLD NEWS + FUN FACTS SIDEBAR (collapsible, all pages) ================= -->
+<button class="news-tab" id="news-tab" aria-label="Open gold news panel" aria-expanded="false">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+  <span>News</span>
+</button>
+<aside class="news-sidebar" id="news-sidebar">
+  <div class="news-sidebar-head">
+    <h3>Gold News</h3>
+    <button id="news-close" aria-label="Close news panel">×</button>
+  </div>
+  <div class="news-list" id="news-list">
+    <div class="news-placeholder">Loading gold market headlines&hellip;</div>
+  </div>
+  <div class="fun-fact-block">
+    <div class="fun-fact-label">DID YOU KNOW?</div>
+    <div class="fun-fact-text" id="fun-fact-text"></div>
+  </div>
+</aside>
 
 <script>
 /* =========================================================
@@ -663,6 +809,7 @@ const badgeLabel = { beginner: "Beginner", intermediate: "Intermediate", progres
 const thumbColors = ["#7a5230","#12202b","#3a2f22","#2b2416"];
 
 function goto(id) {
+  if (id === "about") { showPage("about"); window.scrollTo(0,0); return; }
   showPage("app");
   if (id === "dashboard") currentView = { type: "dashboard" };
   else currentView = { type: "lesson", id };
@@ -673,6 +820,7 @@ function goto(id) {
 function showPage(page) {
   document.querySelector('[data-page="landing"]').style.display = page === "landing" ? "" : "none";
   document.querySelector('[data-page="app"]').style.display = page === "app" ? "grid" : "none";
+  document.querySelector('[data-page="about"]').style.display = page === "about" ? "block" : "none";
 }
 
 /* ---------- Landing dynamic grids ---------- */
@@ -936,10 +1084,101 @@ function initMobileMenu() {
   });
 }
 
+/* ---------- Gold news + fun facts sidebar ---------- */
+
+// Fill this in once you have a free MarketAux API key (see chat for setup + security notes).
+// Leave it as an empty string and the panel will show an honest "not connected" message —
+// it will never display fabricated headlines.
+const NEWS_API_CONFIG = {
+  provider: "marketaux",
+  apiKey: "" // <-- paste your MarketAux api_token here
+};
+
+const GOLD_FUN_FACTS = [
+  "All the gold ever mined in human history would fit into a cube roughly 22 meters on each side.",
+  "Gold is so malleable that a single ounce can be hammered into a sheet covering about 9 square meters.",
+  "Pure gold doesn't tarnish or corrode, which is why gold artifacts thousands of years old still shine today.",
+  "Central banks collectively hold tens of thousands of tonnes of gold as part of their official reserves.",
+  "Gold conducts electricity and resists corrosion so well that it's used in the connectors of most smartphones.",
+  "The ticker XAU comes from combining the Latin word for gold, 'aurum,' with the ISO currency-code format.",
+  "Seawater contains trace amounts of gold, but at concentrations too low to extract profitably with current technology.",
+  "Gold prices are often watched most closely during the London/New York session overlap, when trading volume peaks."
+];
+
+function initFunFacts() {
+  const el = document.getElementById("fun-fact-text");
+  if (!el) return;
+  let i = 0;
+  function show() {
+    el.style.opacity = 0;
+    setTimeout(() => {
+      el.textContent = GOLD_FUN_FACTS[i];
+      el.style.opacity = 1;
+      i = (i + 1) % GOLD_FUN_FACTS.length;
+    }, 300);
+  }
+  show();
+  setInterval(show, 9000);
+}
+
+async function loadGoldNews() {
+  const listEl = document.getElementById("news-list");
+  if (!listEl) return;
+
+  if (!NEWS_API_CONFIG.apiKey) {
+    listEl.innerHTML = `<div class="news-error">Live news isn't connected yet — add a free MarketAux API key in the code to enable real headlines here. No placeholder headlines are shown in the meantime.</div>`;
+    return;
+  }
+
+  try {
+    const url = `https://api.marketaux.com/v1/news/all?search=gold&language=en&limit=10&api_token=${encodeURIComponent(NEWS_API_CONFIG.apiKey)}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Request failed: " + res.status);
+    const data = await res.json();
+    const articles = data.data || [];
+    if (!articles.length) {
+      listEl.innerHTML = `<div class="news-placeholder">No gold headlines returned right now.</div>`;
+      return;
+    }
+    listEl.innerHTML = articles.slice(0, 10).map(a => `
+      <a class="news-item" href="${a.url}" target="_blank" rel="noopener">
+        ${a.title}
+        <span class="src">${a.source || ""}</span>
+      </a>
+    `).join("");
+  } catch (err) {
+    listEl.innerHTML = `<div class="news-error">Couldn't load live news right now (${err.message}). Try again shortly.</div>`;
+  }
+}
+
+function initNewsSidebar() {
+  const tab = document.getElementById("news-tab");
+  const sidebar = document.getElementById("news-sidebar");
+  const closeBtn = document.getElementById("news-close");
+  if (!tab || !sidebar) return;
+
+  function open() {
+    sidebar.classList.add("open");
+    tab.classList.add("hidden");
+    tab.setAttribute("aria-expanded", "true");
+  }
+  function close() {
+    sidebar.classList.remove("open");
+    tab.classList.remove("hidden");
+    tab.setAttribute("aria-expanded", "false");
+  }
+  tab.addEventListener("click", open);
+  closeBtn.addEventListener("click", close);
+
+  initFunFacts();
+  loadGoldNews();
+}
+
 /* ---------- Init ---------- */
 renderLandingGrids();
 initHeroTypewriter();
 initMobileMenu();
+initNewsSidebar();
 renderSession();
 setInterval(renderSession, 60000);
 document.querySelectorAll("[data-goto]").forEach(el => {
