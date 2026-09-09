@@ -375,7 +375,10 @@
     height: 120px;
     display: flex; align-items: center; justify-content: center;
     color: rgba(255,255,255,0.85);
+    position: relative;
+    overflow: hidden;
   }
+  .path-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .path-body { padding: 16px; }
   .path-body h4 { font-size: 16px; margin-bottom: 6px; }
   .path-body p { font-size: 13px; color: var(--text-muted); margin: 0 0 12px; }
@@ -387,6 +390,51 @@
 
   @media (max-width: 1100px) { .path-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 600px) { .path-grid { grid-template-columns: 1fr; } }
+
+  /* ================= Footer ================= */
+  .site-footer {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border-top: 1px solid var(--glass-border);
+    padding: 40px 48px 0;
+    position: relative;
+    z-index: 1;
+  }
+  .footer-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1.4fr;
+    gap: 32px;
+    padding-bottom: 32px;
+  }
+  .footer-brand-col .site-brand { margin-bottom: 10px; }
+  .footer-brand-col .logo-img { height: 28px; }
+  .footer-tagline { font-size: 13px; color: var(--text-muted); max-width: 32ch; line-height: 1.5; }
+  .footer-col-title { font-size: 11px; letter-spacing: 0.06em; color: var(--accent-dark); font-weight: 700; margin-bottom: 12px; text-transform: uppercase; }
+  .footer-col a { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 9px; cursor: pointer; }
+  .footer-col a:hover { color: var(--accent-dark); }
+  .footer-faq-item { margin-bottom: 10px; }
+  .footer-faq-item summary { font-size: 13px; color: var(--text); cursor: pointer; margin-bottom: 4px; }
+  .footer-faq-item p { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin: 6px 0 0; }
+  .footer-bottom {
+    max-width: 1280px;
+    margin: 0 auto;
+    border-top: 1px solid var(--glass-border);
+    padding: 16px 0;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+  @media (max-width: 860px) {
+    .site-footer { padding: 32px 20px 0; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .footer-brand-col { grid-column: 1 / -1; }
+  }
 
   /* ================= FLOATING TRADINGVIEW BUTTON ================= */
   .float-btn {
@@ -507,7 +555,7 @@
     -webkit-backdrop-filter: blur(20px) saturate(160%);
     border-right: 1px solid var(--glass-border);
     padding: 22px 16px;
-    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    position: sticky; top: 66px; height: calc(100vh - 66px); overflow-y: auto;
   }
   .back-to-site { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); margin-bottom: 18px; cursor: pointer; }
   .back-to-site:hover { color: var(--accent-dark); }
@@ -550,6 +598,33 @@
   .lesson-body { max-width: 68ch; }
   .lesson-body p { margin: 0 0 16px; }
   .placeholder-note { border-left: 2px solid var(--accent); padding: 10px 16px; background: var(--bg-alt); color: var(--text-muted); font-size: 13px; margin-bottom: 26px; border-radius: 0 6px 6px 0; }
+
+  .breadcrumb { font-size: 12px; color: var(--text-faint); margin-bottom: 16px; }
+  .breadcrumb a { color: var(--text-faint); cursor: pointer; }
+  .breadcrumb a:hover { color: var(--accent-dark); }
+  .breadcrumb .crumb-current { color: var(--text-muted); }
+
+  .lesson-meta-row { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
+  .lesson-meta-row .meta-item { font-size: 12px; color: var(--text-faint); }
+
+  .learn-points-box, .takeaways-box {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    margin: 22px 0;
+  }
+  .learn-points-label, .takeaways-label { font-size: 11px; letter-spacing: 0.06em; color: var(--accent-dark); font-weight: 700; margin-bottom: 10px; }
+  .learn-points-box ul, .takeaways-box ul { margin: 0; padding-left: 18px; }
+  .learn-points-box li, .takeaways-box li { font-size: 14px; color: var(--text); margin-bottom: 6px; line-height: 1.4; }
+
+  .next-lesson-cta {
+    border-top: 1px solid var(--glass-border);
+    margin-top: 30px;
+    padding-top: 24px;
+  }
+  .next-lesson-cta .next-label { font-size: 12px; color: var(--text-faint); margin-bottom: 10px; }
+  .next-btn { padding: 12px 20px; }
   .lesson-actions { display: flex; gap: 10px; margin: 30px 0; }
   .lesson-actions button.mark { padding: 11px 18px; border-radius: var(--radius-sm); }
 
@@ -583,40 +658,43 @@
 <div class="bg-blob b2"></div>
 <div class="bg-blob b3"></div>
 
+<!-- ================= PERSISTENT SITE NAV (all pages) ================= -->
+<nav class="site-nav">
+  <div class="site-brand">
+    <img class="logo-img" id="brand-logo" src="logo.png" alt="Golden Edge logo"
+         onerror="this.style.display='none'"
+         onload="this.style.display='block'; document.getElementById('brand-mark').style.display='none';">
+    <div class="mark" id="brand-mark"><span></span><span></span><span></span></div>
+    <div class="names"><h1>Golden Edge</h1></div>
+  </div>
+  <div class="nav-links">
+    <a class="current" data-goto="landing" data-navkey="landing">Home</a>
+    <a data-goto="dashboard" data-navkey="learn">Lessons</a>
+    <a data-goto="w1" data-navkey="market">Market<br>Basics</a>
+    <a data-goto="w3" data-navkey="technical">Technical<br>Analysis</a>
+    <a data-goto="w9" data-navkey="risk">Risk<br>Management</a>
+    <a data-goto="w10" data-navkey="journal">Trading<br>Journal</a>
+    <a data-goto="about" data-navkey="about">About</a>
+  </div>
+  <button class="btn-primary" data-goto="dashboard">Start Learning</button>
+  <button class="hamburger-btn" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a class="current" data-goto="landing" data-navkey="landing">Home</a>
+  <a data-goto="dashboard" data-navkey="learn">Lessons</a>
+  <a data-goto="w1" data-navkey="market">Market Basics</a>
+  <a data-goto="w3" data-navkey="technical">Technical Analysis</a>
+  <a data-goto="w9" data-navkey="risk">Risk Management</a>
+  <a data-goto="w10" data-navkey="journal">Trading Journal</a>
+  <a data-goto="about" data-navkey="about">About</a>
+  <button class="btn-primary" data-goto="dashboard">Start Learning</button>
+</div>
+
 <!-- ================= LANDING PAGE ================= -->
 <div data-page="landing">
-  <nav class="site-nav">
-    <div class="site-brand">
-      <img class="logo-img" id="brand-logo" src="logo.png" alt="Golden Edge logo"
-           onerror="this.style.display='none'"
-           onload="this.style.display='block'; document.getElementById('brand-mark').style.display='none';">
-      <div class="mark" id="brand-mark"><span></span><span></span><span></span></div>
-      <div class="names"><h1>Golden Edge</h1></div>
-    </div>
-    <div class="nav-links">
-      <a class="current" href="#">Home</a>
-      <a data-goto="dashboard">Lessons</a>
-      <a data-goto="w1">Market<br>Basics</a>
-      <a data-goto="w3">Technical<br>Analysis</a>
-      <a data-goto="w9">Risk<br>Management</a>
-      <a data-goto="w10">Trading<br>Journal</a>
-      <a data-goto="about">About</a>
-    </div>
-    <button class="btn-primary" data-goto="dashboard">Start Learning</button>
-    <button class="hamburger-btn" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-  <div class="mobile-menu" id="mobile-menu">
-    <a class="current" href="#" data-goto="dashboard">Home</a>
-    <a data-goto="dashboard">Lessons</a>
-    <a data-goto="w1">Market Basics</a>
-    <a data-goto="w3">Technical Analysis</a>
-    <a data-goto="w9">Risk Management</a>
-    <a data-goto="w10">Trading Journal</a>
-    <a data-goto="about">About</a>
-    <button class="btn-primary" data-goto="dashboard">Start Learning</button>
-  </div>
+
 
   <section class="hero">
     <div>
@@ -679,18 +757,8 @@
 
 <!-- ================= ABOUT PAGE ================= -->
 <div data-page="about" style="display:none;">
-  <nav class="site-nav">
-    <div class="site-brand">
-      <img class="logo-img" id="brand-logo-about" src="logo.png" alt="Golden Edge logo"
-           onerror="this.style.display='none'"
-           onload="this.style.display='block';">
-      <div class="mark" id="brand-mark-about" style="display:none;"><span></span><span></span><span></span></div>
-      <div class="names"><h1>Golden Edge</h1></div>
-    </div>
-    <a data-goto="dashboard" style="font-size:12px;letter-spacing:0.05em;text-transform:uppercase;font-weight:600;color:var(--accent-dark);cursor:pointer;">← Back to home</a>
-  </nav>
 
-  <section class="section" style="max-width:760px;">
+  <section class="section" style="max-width:760px; padding-top:44px;">
     <div class="section-kicker">ABOUT</div>
     <h2 style="font-size:34px;margin-bottom:22px;">Golden Edge</h2>
     <p class="lead" style="margin-bottom:36px;">Golden Edge is a structured study platform for learning gold trading — built on the belief that the hardest part of learning to trade isn't finding information, it's knowing what to learn, in what order, and why.</p>
@@ -725,6 +793,53 @@
   <main class="app-main" id="main"></main>
 </div>
 
+<!-- ================= FOOTER (all pages) ================= -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-col footer-brand-col">
+      <div class="site-brand">
+        <img class="logo-img" src="logo.png" alt="Golden Edge logo" style="display:block;" onerror="this.style.display='none'">
+        <div class="names"><h1 style="font-size:17px;">Golden Edge</h1></div>
+      </div>
+      <p class="footer-tagline">A structured study platform for learning gold trading — one concept, one lesson, one step at a time.</p>
+    </div>
+
+    <div class="footer-col">
+      <div class="footer-col-title">Learn</div>
+      <a data-goto="dashboard">All Lessons</a>
+      <a data-goto="w1">Market Basics</a>
+      <a data-goto="w3">Technical Analysis</a>
+      <a data-goto="w9">Risk Management</a>
+    </div>
+
+    <div class="footer-col">
+      <div class="footer-col-title">Platform</div>
+      <a data-goto="about">About</a>
+      <a data-goto="dashboard">Your Progress</a>
+    </div>
+
+    <div class="footer-col footer-faq-col">
+      <div class="footer-col-title">FAQ</div>
+      <details class="footer-faq-item">
+        <summary>Is Golden Edge a signals service?</summary>
+        <p>No. Golden Edge is strictly educational — it teaches how to understand and analyze gold, not "buy here / sell here" calls, and makes no profit guarantees.</p>
+      </details>
+      <details class="footer-faq-item">
+        <summary>Why does Golden Edge focus only on gold?</summary>
+        <p>Specialization builds deeper understanding than spreading across every market. The philosophy: don't try to know every market — learn one market deeply.</p>
+      </details>
+      <details class="footer-faq-item">
+        <summary>Is trading risky?</summary>
+        <p>Yes. Trading involves real financial risk, including the possibility of losing money. Nothing here is financial advice — practice responsibly and never risk more than you can afford to lose.</p>
+      </details>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© <span id="footer-year"></span> Golden Edge. Created by Wangota Jimmy (iCon).</span>
+    <span class="footer-disclaimer">Educational content only — not financial advice.</span>
+  </div>
+</footer>
+
 <!-- ================= FLOATING TRADINGVIEW BUTTON (all pages) ================= -->
 <a class="float-btn" href="https://www.tradingview.com/chart/?symbol=OANDA%3AXAUUSD" target="_blank" rel="noopener">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="14" width="4" height="7"/><rect x="10" y="9" width="4" height="12"/><rect x="17" y="4" width="4" height="17"/></svg>
@@ -756,8 +871,18 @@
    ========================================================= */
 const CURRICULUM = [
   { phase: "Month 1 — Market Foundations", weeks: [
-    { id: "w1", title: "How Gold Trades", summary: "Spot gold vs futures, what XAU/USD means, who moves the market.", badge: "beginner",
-      content: "Placeholder lesson content. This week covers how gold is actually traded — spot market vs futures, what quotes like XAU/USD represent, and the major players (central banks, institutions, retail) that move price.",
+    { id: "w1", title: "How Gold Trades", summary: "Spot gold vs futures, what XAU/USD means, who moves the market.", badge: "beginner", estMinutes: 18,
+      whatYoullLearn: [
+        "The difference between spot gold, gold futures, and gold-backed ETFs",
+        "What the XAU/USD quote actually represents",
+        "Who the major participants in the gold market are, and roughly how much influence each has"
+      ],
+      content: "Gold trades in a few distinct forms, and most beginners run into all of them before understanding the difference. <br><br><strong>Spot gold</strong> is the price for immediate delivery — it's the number you see quoted as \"gold price\" almost everywhere, including on the XAU/USD pair most retail traders actually trade. <strong>Gold futures</strong> (like COMEX contracts) are agreements to buy or sell gold at a set price on a future date — used heavily by institutions and for price discovery, and where you'll see contract codes like GCZ25. <strong>Gold ETFs</strong> (like GLD) let people gain exposure to gold's price through a stock-market-listed fund, without holding the metal or trading a currency pair. <br><br>When retail traders say \"trading gold,\" they almost always mean trading XAU/USD — a quote that expresses how many US dollars one troy ounce of gold costs, structured like a currency pair even though gold isn't a currency. <br><br>Price in that market is shaped by a mix of participants: central banks (who hold gold as a reserve asset and occasionally buy or sell in large size), large institutions and hedge funds (trading futures and driving most volume), and retail traders (a much smaller share of overall volume, but the group most beginners are part of). Central bank policy — particularly US interest rate decisions — tends to move gold more than any single other factor, because gold pays no yield itself, so it competes directly with interest-bearing assets like bonds.",
+      takeaways: [
+        "XAU/USD is the spot price of one troy ounce of gold, quoted in US dollars",
+        "Futures and ETFs are different instruments built on the same underlying asset",
+        "Central bank policy and interest rates are usually the single biggest driver of gold price moves"
+      ],
       quiz: [
         { q: "What does XAU/USD represent?", options: ["Gold priced in US dollars", "A gold mining company stock", "A gold futures expiry date"], correct: 0 },
         { q: "Which of these typically has the largest influence on gold price?", options: ["Retail traders", "Central bank policy & real yields", "Local jewellery demand alone"], correct: 1 }
@@ -809,12 +934,29 @@ const badgeLabel = { beginner: "Beginner", intermediate: "Intermediate", progres
 const thumbColors = ["#7a5230","#12202b","#3a2f22","#2b2416"];
 
 function goto(id) {
-  if (id === "about") { showPage("about"); window.scrollTo(0,0); return; }
+  if (id === "landing") { showPage("landing"); updateNavCurrent("landing"); window.scrollTo(0,0); return; }
+  if (id === "about") { showPage("about"); updateNavCurrent("about"); window.scrollTo(0,0); return; }
   showPage("app");
+  updateNavCurrent(id === "dashboard" ? "learn" : navKeyForWeek(id));
   if (id === "dashboard") currentView = { type: "dashboard" };
   else currentView = { type: "lesson", id };
   render();
   window.scrollTo(0,0);
+}
+
+function navKeyForWeek(weekId) {
+  // maps a lesson id back to the nav section it most closely belongs to, for highlighting only
+  if (["w1","w2"].includes(weekId)) return "market";
+  if (["w3","w4","w7"].includes(weekId)) return "technical";
+  if (["w9"].includes(weekId)) return "risk";
+  if (["w10"].includes(weekId)) return "journal";
+  return "learn";
+}
+
+function updateNavCurrent(navkey) {
+  document.querySelectorAll('[data-navkey]').forEach(el => {
+    el.classList.toggle("current", el.dataset.navkey === navkey);
+  });
 }
 
 function showPage(page) {
@@ -831,6 +973,7 @@ function renderLandingGrids() {
     return `
       <div class="path-card" data-goto="${w.id}">
         <div class="path-thumb" style="background:${thumbColors[i]}">
+          <img src="images/lesson-${w.id}.jpg" alt="" onerror="this.remove()">
           <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="14" width="4" height="7"/><rect x="10" y="9" width="4" height="12"/><rect x="17" y="4" width="4" height="17"/></svg>
         </div>
         <div class="path-body">
@@ -847,6 +990,7 @@ function renderLandingGrids() {
     return `
       <div class="path-card" data-goto="${w.id}">
         <div class="path-thumb" style="background:${thumbColors[i+1]}">
+          <img src="images/lesson-${w.id}.jpg" alt="" onerror="this.remove()">
           <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="14" width="4" height="7"/><rect x="10" y="9" width="4" height="12"/><rect x="17" y="4" width="4" height="17"/></svg>
         </div>
         <div class="path-body">
@@ -935,17 +1079,51 @@ function renderLesson(weekId) {
   const week = allWeeks.find(w => w.id === weekId);
   if (!week) { renderDashboard(); return; }
   const isDone = !!state.completed[week.id];
+  const idx = allWeeks.findIndex(w => w.id === weekId);
+  const nextWeek = allWeeks[idx + 1];
+  const estMinutes = week.estMinutes || 20;
+
+  const learnPoints = week.whatYoullLearn && week.whatYoullLearn.length
+    ? week.whatYoullLearn
+    : null;
+  const takeaways = week.takeaways && week.takeaways.length
+    ? week.takeaways
+    : null;
 
   let html = `<div class="view">
-    <div class="eyebrow-row">${week.phase} · Week ${week.id.replace('w','')}</div>
+    <div class="breadcrumb">
+      <a data-goto="landing">Golden Edge</a> <span>→</span>
+      <a data-goto="dashboard">${week.phase}</a> <span>→</span>
+      <span class="crumb-current">${week.title}</span>
+    </div>
+
+    <div class="lesson-meta-row">
+      <span class="badge ${week.badge}">${badgeLabel[week.badge]}</span>
+      <span class="meta-item">⏱ ~${estMinutes} min</span>
+      <span class="meta-item">Lesson ${week.id.replace('w','')} of ${allWeeks.length}</span>
+    </div>
     <h2>${week.title}</h2>
     <p class="subtitle">${week.summary}</p>
-    <div class="placeholder-note">This lesson is a placeholder. Content for this week gets filled in as we go — the structure, progress tracking, and quiz already work end to end.</div>
+
+    ${learnPoints ? `
+    <div class="learn-points-box">
+      <div class="learn-points-label">WHAT YOU'LL LEARN</div>
+      <ul>${learnPoints.map(p => `<li>${p}</li>`).join("")}</ul>
+    </div>` : ""}
+
+    <div class="placeholder-note">This lesson's main content is a placeholder. The structure — breadcrumb, meta, learning goals, takeaways, knowledge check and next-lesson flow — is fully wired; real content gets filled in module by module.</div>
     <div class="lesson-body"><p>${week.content}</p></div>
+
+    ${takeaways ? `
+    <div class="takeaways-box">
+      <div class="takeaways-label">KEY TAKEAWAYS</div>
+      <ul>${takeaways.map(t => `<li>${t}</li>`).join("")}</ul>
+    </div>` : ""}
+
     <div class="lesson-actions"><button class="btn-primary mark" data-mark="${week.id}">${isDone?'Mark as not complete':'Mark lesson complete'}</button></div>`;
 
   if (week.quiz && week.quiz.length) {
-    html += `<div class="quiz-block"><h3>Check your understanding</h3>`;
+    html += `<div class="quiz-block"><h3>Knowledge check</h3>`;
     week.quiz.forEach((q, qi) => {
       html += `<div class="question" data-qindex="${qi}"><div class="q-text">${qi+1}. ${q.q}</div>`;
       q.options.forEach((opt, oi) => { html += `<div class="option" data-qi="${qi}" data-oi="${oi}">${opt}</div>`; });
@@ -953,14 +1131,32 @@ function renderLesson(weekId) {
     });
     html += `<button id="submit-quiz">Submit answers</button><div id="quiz-result"></div></div>`;
   } else {
-    html += `<div class="quiz-block empty-state">No quiz added for this week yet.</div>`;
+    html += `<div class="quiz-block empty-state">No knowledge check added for this lesson yet.</div>`;
   }
+
+  html += `<div class="next-lesson-cta">`;
+  if (nextWeek) {
+    html += `<div class="next-label">Lesson complete? Continue to</div>
+      <button class="btn-primary next-btn" data-open="${nextWeek.id}">${nextWeek.title} →</button>`;
+  } else {
+    html += `<div class="next-label">You've reached the end of the current curriculum. Nice work.</div>
+      <button class="btn-primary next-btn" data-open="dashboard-view">Back to dashboard →</button>`;
+  }
+  html += `</div>`;
+
   html += `</div>`;
   document.getElementById("main").innerHTML = html;
 
   document.querySelector("[data-mark]").addEventListener("click", () => {
     state.completed[week.id] = !state.completed[week.id];
     saveState(state); render();
+  });
+
+  document.querySelectorAll("[data-open]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentView = btn.dataset.open === "dashboard-view" ? {type:"dashboard"} : {type:"lesson", id: btn.dataset.open};
+      render(); window.scrollTo(0,0);
+    });
   });
 
   if (week.quiz && week.quiz.length) {
@@ -1175,6 +1371,9 @@ function initNewsSidebar() {
 }
 
 /* ---------- Init ---------- */
+const footerYearEl = document.getElementById("footer-year");
+if (footerYearEl) footerYearEl.textContent = new Date().getFullYear();
+
 renderLandingGrids();
 initHeroTypewriter();
 initMobileMenu();
