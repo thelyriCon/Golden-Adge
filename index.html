@@ -77,9 +77,7 @@
     font-size: 14px;
   }
   .btn-primary {
-    background: rgba(20,17,12,0.72);
-    backdrop-filter: blur(10px) saturate(160%);
-    -webkit-backdrop-filter: blur(10px) saturate(160%);
+    background: #100e09;
     color: #e9c165;
     padding: 12px 22px;
     font-weight: 700;
@@ -87,9 +85,9 @@
     align-items: center;
     gap: 8px;
     border: 1px solid rgba(233,193,101,0.35);
-    box-shadow: 0 6px 20px -8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+    box-shadow: 0 6px 20px -8px rgba(0,0,0,0.5);
   }
-  .btn-primary:hover { background: rgba(20,17,12,0.85); color: #f3dfa0; }
+  .btn-primary:hover { background: #1c1912; color: #f3dfa0; }
   button:focus-visible, a:focus-visible, [tabindex]:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
@@ -181,14 +179,35 @@
 
   /* ================= HERO ================= */
   .hero {
-    padding: 56px 48px 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    position: relative;
+    min-height: 480px;
+    display: flex;
     align-items: center;
-    max-width: 1280px;
-    margin: 0 auto;
+    overflow: hidden;
+    margin-bottom: 8px;
   }
+  .hero-bg-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+  .hero-scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(100deg, rgba(10,8,5,0.88) 0%, rgba(10,8,5,0.55) 45%, rgba(10,8,5,0.15) 75%);
+    z-index: 1;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 56px 48px;
+  }
+  .hero-content .hero-eyebrow { color: #e9c165; }
+  .hero-content .lead { color: rgba(243,238,224,0.78); }
+  .hero-content .fixed-text { color: #f7f2e7; }
   .hero-eyebrow {
     font-size: 12px;
     letter-spacing: 0.08em;
@@ -307,10 +326,16 @@
   .chip-3 { bottom: 40px; left: 8px; max-width: 150px; }
   .chip-3 .v { font-size: 13px; line-height: 1.3; }
 
+  .hero-chip-row { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+  .chip-inline { position: static; background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.22); }
+  .chip-inline .k { color: rgba(243,238,224,0.55); }
+  .chip-inline .v { color: #e9c165; }
+  .chip-inline .chip-note { color: rgba(243,238,224,0.4); }
+
   @media (prefers-reduced-motion: reduce) { .gold-bar { animation: none; } }
 
   @media (max-width: 860px) {
-    .hero { grid-template-columns: 1fr; padding: 36px 22px 0; }
+    .hero-content { padding: 36px 22px; }
     .hero h2 { font-size: 32px; }
   }
 
@@ -438,20 +463,20 @@
   }
 
   /* ================= FLOATING TRADINGVIEW BUTTON ================= */
-  .float-btn, .news-tab {
+  .float-btn, .news-tab, .chatbot-btn {
     position: fixed;
     bottom: 22px;
     z-index: 100;
     display: flex;
     align-items: center;
-    background: rgba(30,25,15,0.55);
-    backdrop-filter: blur(14px) saturate(160%);
-    -webkit-backdrop-filter: blur(14px) saturate(160%);
-    color: #f3dfae;
+    background: rgba(255,255,255,0.38);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    color: #141110;
     border-radius: 999px;
     padding: 13px;
-    box-shadow: 0 10px 25px -8px rgba(0,0,0,0.35);
-    border: 1px solid rgba(255,255,255,0.18);
+    box-shadow: 0 10px 25px -8px rgba(30,25,15,0.25), inset 0 1px 0 rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.55);
     overflow: hidden;
     white-space: nowrap;
     transition: padding 0.25s ease;
@@ -459,7 +484,8 @@
   }
   .float-btn { right: 22px; }
   .news-tab { right: 78px; writing-mode: horizontal-tb; text-orientation: initial; letter-spacing: normal; font-size: inherit; flex-direction: row; gap: 0; }
-  .float-btn .label, .news-tab .label {
+  .chatbot-btn { right: 134px; }
+  .float-btn .label, .news-tab .label, .chatbot-btn .label {
     max-width: 0;
     opacity: 0;
     overflow: hidden;
@@ -467,12 +493,36 @@
     font-size: 13px;
     font-weight: 600;
   }
-  .float-btn:hover, .news-tab:hover { padding: 13px 18px 13px 13px; }
-  .float-btn:hover .label, .news-tab:hover .label { max-width: 160px; opacity: 1; margin-left: 8px; }
-  .float-btn svg, .news-tab svg { flex-shrink: 0; width: 20px; height: 20px; }
+  .float-btn:hover, .news-tab:hover, .chatbot-btn:hover { padding: 13px 18px 13px 13px; background: rgba(255,255,255,0.5); }
+  .float-btn:hover .label, .news-tab:hover .label, .chatbot-btn:hover .label { max-width: 160px; opacity: 1; margin-left: 8px; }
+  .float-btn svg, .news-tab svg, .chatbot-btn svg { flex-shrink: 0; width: 20px; height: 20px; }
   .news-tab.hidden { display: none; }
 
   /* ---------- Gold news / fun facts sidebar ---------- */
+
+  .chatbot-panel {
+    position: fixed;
+    bottom: 78px;
+    right: 134px;
+    width: 300px;
+    max-width: 82vw;
+    max-height: 60vh;
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--glass-shadow);
+    z-index: 101;
+    display: none;
+    flex-direction: column;
+    padding: 16px;
+  }
+  .chatbot-panel.open { display: flex; }
+  .chatbot-panel-head { display: flex; justify-content: space-between; align-items: center; font-weight: 600; margin-bottom: 10px; }
+  .chatbot-panel-head button { background: none; border: none; font-size: 20px; color: var(--text-muted); }
+  .chatbot-panel-body { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+  @media (max-width: 600px) { .chatbot-panel { right: 12px; left: 12px; width: auto; } }
 
   .news-sidebar {
     position: fixed;
@@ -524,6 +574,23 @@
   @media (max-width: 600px) {
     .float-btn .label, .news-tab .label { display: none; }
   }
+
+  .glossary-search-input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 22px;
+  }
+  .glossary-list { display: flex; flex-direction: column; gap: 4px; }
+  .glossary-item { padding: 14px 4px; border-bottom: 1px solid var(--glass-border); }
+  .glossary-term { font-weight: 700; color: var(--accent-dark); margin-bottom: 4px; }
+  .glossary-def { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
 
   /* ================= APP (dashboard / lesson) — reused, re-themed light ================= */
   .app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
@@ -652,7 +719,9 @@
     <a data-goto="w3" data-navkey="technical">Technical<br>Analysis</a>
     <a data-goto="w9" data-navkey="risk">Risk<br>Management</a>
     <a data-goto="w10" data-navkey="journal">Trading<br>Journal</a>
-    <a data-goto="about" data-navkey="about">About</a>
+    <a data-goto="glossary" data-navkey="glossary">Glossary</a>
+      <a data-goto="glossary" data-navkey="glossary">Glossary</a>
+  <a data-goto="about" data-navkey="about">About</a>
   </div>
   <button class="btn-primary" data-goto="dashboard">Start Learning</button>
   <button class="hamburger-btn" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
@@ -675,23 +744,19 @@
 
 
   <section class="hero">
-    <div>
+    <img class="hero-bg-img" src="images/hero-chart.jpg" alt="" onerror="this.style.display='none'">
+    <div class="hero-scrim"></div>
+    <div class="hero-content">
       <div class="hero-eyebrow">LEARN &nbsp;/&nbsp; PRACTICE &nbsp;/&nbsp; GROW</div>
       <h2 class="hero-headline"><span class="fixed-text">LEARN TO&hellip;</span><span class="animated-wrap"><span id="typewriter-text" class="animated-text"></span><span class="type-cursor" aria-hidden="true"></span></span></h2>
-      <p class="lead">A structured study platform for learning XAU/USD, market structure, technical analysis, risk management and trading psychology &mdash; one instrument, mastered in depth.</p>
+      <p class="lead" style="margin-bottom:26px;">A structured study platform for learning XAU/USD, market structure, technical analysis, risk management and trading psychology &mdash; one instrument, mastered in depth.</p>
       <button class="btn-primary" data-goto="dashboard">Start Learning &nbsp;→</button>
-    </div>
-    <div class="hero-visual">
-      <div class="gold-bar-scene">
-        <div class="gold-bar">
-          <div class="top-edge"></div>
-          <div class="face"></div>
-          <div class="stamp"><span class="k">FINE GOLD</span><span class="v">999.9</span></div>
-        </div>
+
+      <div class="hero-chip-row">
+        <div class="glass-chip chip-inline"><div class="k">XAU/USD</div><div class="v num">2,486.30</div><div class="chip-note">sample data</div></div>
+        <div class="glass-chip chip-inline"><div class="k">TODAY</div><div class="v num" style="color:#7fce9e">+0.62%</div><div class="chip-note">sample data</div></div>
+        <div class="glass-chip chip-inline"><div class="k">SESSION</div><div class="v" id="session-value">—</div></div>
       </div>
-      <div class="glass-chip chip-1"><div class="k">XAU/USD</div><div class="v num">2,486.30</div><div class="chip-note">sample data</div></div>
-      <div class="glass-chip chip-2"><div class="k">TODAY</div><div class="v num" style="color:#4d8a63">+0.62%</div><div class="chip-note">sample data</div></div>
-      <div class="glass-chip chip-3"><div class="k">SESSION</div><div class="v" id="session-value">—</div></div>
     </div>
   </section>
 
@@ -765,6 +830,17 @@
   </section>
 </div>
 
+<!-- ================= GLOSSARY PAGE ================= -->
+<div data-page="glossary" style="display:none;">
+  <section class="section" style="max-width:760px; padding-top:44px;">
+    <div class="section-kicker">REFERENCE</div>
+    <h2 style="font-size:34px;margin-bottom:12px;">Trading Glossary</h2>
+    <p class="lead" style="margin-bottom:28px;">Quick, plain-language definitions for terms you'll run into throughout the course. Search or just scroll.</p>
+    <input type="text" id="glossary-search" placeholder="Search terms…" class="glossary-search-input">
+    <div id="glossary-list" class="glossary-list"></div>
+  </section>
+</div>
+
 <!-- ================= APP (dashboard / lesson) ================= -->
 <div class="app" data-page="app">
   <nav class="app-sidebar" id="sidebar"></nav>
@@ -794,6 +870,8 @@
       <div class="footer-col-title">Platform</div>
       <a data-goto="about">About</a>
       <a data-goto="dashboard">Your Progress</a>
+      <a data-goto="glossary">Glossary</a>
+      <a href="mailto:youremail@example.com">Contact the Developer</a>
     </div>
 
     <div class="footer-col footer-faq-col">
@@ -823,6 +901,21 @@
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="14" width="4" height="7"/><rect x="10" y="9" width="4" height="12"/><rect x="17" y="4" width="4" height="17"/></svg>
   <span class="label">Live Gold Chart ↗</span>
 </a>
+
+<!-- ================= AI CHATBOT BUTTON (shell — see chat for what's needed to activate) ================= -->
+<button class="chatbot-btn" id="chatbot-btn" aria-label="Open assistant" aria-expanded="false">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+  <span class="label">Ask Golden Edge</span>
+</button>
+<div class="chatbot-panel" id="chatbot-panel">
+  <div class="chatbot-panel-head">
+    <span>Golden Edge Assistant</span>
+    <button id="chatbot-close" aria-label="Close assistant">×</button>
+  </div>
+  <div class="chatbot-panel-body">
+    <p>This assistant isn't connected yet — it needs an embed snippet from a chatbot provider (see chat) before it can actually answer questions.</p>
+  </div>
+</div>
 
 <!-- ================= GOLD NEWS + FUN FACTS SIDEBAR (collapsible, all pages) ================= -->
 <button class="news-tab" id="news-tab" aria-label="Open gold news panel" aria-expanded="false">
@@ -865,15 +958,55 @@ const CURRICULUM = [
         { q: "What does XAU/USD represent?", options: ["Gold priced in US dollars", "A gold mining company stock", "A gold futures expiry date"], correct: 0 },
         { q: "Which of these typically has the largest influence on gold price?", options: ["Retail traders", "Central bank policy & real yields", "Local jewellery demand alone"], correct: 1 }
       ]},
-    { id: "w2", title: "Sessions & Timing", summary: "Asian, London, New York sessions — and when gold actually moves.", badge: "beginner",
-      content: "Placeholder lesson content. This week covers the three major trading sessions, the London/New York overlap, and why gold's most active hours matter for when you choose to trade.",
-      quiz: [ { q: "Gold typically sees its highest volatility during:", options: ["The Asian session alone", "The London/New York overlap", "Weekends"], correct: 1 } ]},
-    { id: "w3", title: "Market Structure", summary: "Higher highs, higher lows, and reading trend structure.", badge: "intermediate",
-      content: "Placeholder lesson content. This week covers candlestick anatomy, how to pick a timeframe, and how to identify higher-highs/higher-lows trend structure.",
-      quiz: [ { q: "A candlestick's wick shows:", options: ["The opening price only", "The high/low range beyond open-close", "The trading volume"], correct: 1 } ]},
-    { id: "w4", title: "Support & Resistance", summary: "Identifying levels price reacts to, and why they matter.", badge: "intermediate",
-      content: "Placeholder lesson content. This week covers how to mark support/resistance, round numbers, and prior highs/lows on a gold chart.",
-      quiz: [ { q: "Support is best described as:", options: ["A level price has trouble falling below", "A level price always breaks", "A random price"], correct: 0 } ]}
+    { id: "w2", title: "Sessions & Timing", summary: "Asian, London, New York sessions — and when gold actually moves.", badge: "beginner", estMinutes: 16,
+      whatYoullLearn: [
+        "The three major trading sessions and their approximate UTC hours",
+        "Why the London/New York overlap tends to be gold's most active window",
+        "How to match your own available hours to a session rather than trading blind at random times"
+      ],
+      content: "Gold trades nearly 24 hours a day on weekdays, but it doesn't move the same way at every hour — activity rolls between three overlapping regional sessions. <br><br>The <strong>Asian session</strong> (roughly 00:00–09:00 UTC, anchored by Tokyo) tends to be the quietest for gold — tighter ranges, fewer sharp moves, though it can still react to Asian economic data or overnight news. The <strong>London session</strong> (roughly 07:00–16:00 UTC) is where volume picks up meaningfully — European institutions are active and gold often establishes its range for the day. The <strong>New York session</strong> (roughly 12:00–21:00 UTC) brings US economic data, Federal Reserve commentary, and the bulk of US institutional flow. <br><br>The <strong>London/New York overlap</strong> (roughly 12:00–16:00 UTC) is when both major financial centers are active simultaneously — this window consistently sees gold's highest volume and largest intraday moves, and it's when most major US economic releases (like inflation data or Fed decisions) are scheduled. <br><br>This matters practically: if you can only trade a couple of hours a day, trading during the quiet tail of the Asian session and expecting the same behavior you'd see during the overlap will lead to confusion about why 'nothing is happening,' or the opposite problem — being caught off guard by a sudden move you didn't expect outside your usual quiet window. Knowing which session you're in helps you calibrate what kind of price behavior to actually expect.",
+      takeaways: [
+        "Asian session: generally quieter, tighter ranges",
+        "London session: volume picks up, the day's range often forms here",
+        "London/New York overlap: gold's highest-volume, highest-volatility window, and where most major US news lands"
+      ],
+      quiz: [
+        { q: "Gold typically sees its highest volatility during:", options: ["The Asian session alone", "The London/New York overlap", "Weekends"], correct: 1 },
+        { q: "Why does the London/New York overlap see more movement?", options: ["Markets are officially closed then", "Two major financial centers are active at once, plus most US data releases land in this window", "It's a random pattern with no real cause"], correct: 1 }
+      ]},
+    { id: "w3", title: "Market Structure", summary: "Candlesticks, higher highs/higher lows, and reading trend structure.", badge: "intermediate", estMinutes: 22,
+      whatYoullLearn: [
+        "How to read a single candlestick — body, wicks, and what each represents",
+        "The handful of candlestick patterns worth actually knowing, and what they suggest",
+        "How to identify trend structure using higher highs/higher lows and lower highs/lower lows"
+      ],
+      content: "A candlestick shows four prices for a chosen time period: open, high, low, and close. The thick part (the <strong>body</strong>) spans open to close — a filled/red body means price closed lower than it opened, a hollow/green body means it closed higher. The thin lines above and below (the <strong>wicks</strong> or shadows) show the full high-to-low range reached during that period, even if price didn't close there. <br><br>A few candlestick patterns come up often enough to be worth knowing by name, though none of them work in isolation — context (where they appear on the chart) matters more than the shape itself: <br><br><strong>Doji</strong> — open and close are nearly equal, producing a thin cross-like shape. Signals indecision — neither buyers nor sellers won that period. <br><strong>Hammer</strong> — a small body near the top of the candle with a long lower wick, appearing after a decline. Suggests sellers pushed price down but buyers stepped in and pushed it back up before the close. <br><strong>Engulfing</strong> — a candle whose body completely covers the previous candle's body in the opposite direction. A bullish engulfing after a downtrend suggests a potential shift in control from sellers to buyers. <br><br>Beyond individual candles, <strong>market structure</strong> is about the bigger shape price is drawing over many candles. An uptrend is defined by a sequence of <strong>higher highs</strong> (each peak higher than the last) and <strong>higher lows</strong> (each dip higher than the last one before it) — buyers are consistently willing to pay more, and sellers can't push price back down as far as before. A downtrend is the mirror image: <strong>lower highs</strong> and <strong>lower lows</strong>. When price stops making either — bouncing between roughly the same high and low repeatedly — that's a <strong>range</strong>, not a trend. Learning to label a chart this way, before looking at any indicator, is usually the single most useful chart-reading skill for gold, since it tells you whether you're working with the trend or against it.",
+      takeaways: [
+        "A candle's body shows open-to-close; its wicks show the full range reached",
+        "Doji, hammer, and engulfing patterns hint at shifting control between buyers and sellers — read them in context, not alone",
+        "Uptrend = higher highs + higher lows. Downtrend = lower highs + lower lows. Neither = a range."
+      ],
+      quiz: [
+        { q: "A candlestick's wick shows:", options: ["The opening price only", "The high/low range beyond open-close", "The trading volume"], correct: 1 },
+        { q: "A market is in an uptrend when it's making:", options: ["Higher highs and higher lows", "Lower highs and lower lows", "The same high and low repeatedly"], correct: 0 },
+        { q: "A hammer candle appearing after a decline suggests:", options: ["Sellers are firmly in control with no resistance", "Buyers stepped in and pushed price back up before the close", "The market is closed"], correct: 1 }
+      ]},
+    { id: "w4", title: "Support & Resistance", summary: "Identifying levels price reacts to, and why they matter.", badge: "intermediate", estMinutes: 18,
+      whatYoullLearn: [
+        "What makes a price level count as support or resistance",
+        "Why round numbers often act as psychological levels on gold",
+        "How prior highs and lows tend to become future support/resistance"
+      ],
+      content: "<strong>Support</strong> is a price area where an asset has historically had trouble falling below — buying pressure tends to increase there, slowing or reversing a decline. <strong>Resistance</strong> is the mirror image — a level where selling pressure tends to increase, making it harder for price to rise further. Neither is a hard floor or ceiling; think of them as zones where the odds of a reaction shift, not guarantees. <br><br>On gold specifically, a few things commonly act as support/resistance: <strong>round numbers</strong> (like $2,400 or $2,500) attract attention simply because they're psychologically 'clean' levels many traders watch, so orders tend to cluster around them. <strong>Prior highs and lows</strong> — a level where price previously reversed — often act as support/resistance again later, because traders remember where the market turned before and place orders accordingly. Once broken, a resistance level frequently flips to become support (and vice versa), since the group of traders who were selling at that level are often the same ones now buying it as new support, expecting the breakout to hold. <br><br>A practical way to find these levels: look left on the chart for the two or three most obvious points where price clearly reversed direction more than once, and mark those zones rather than a single exact price. Gold rarely respects a level to the exact cent, so treating support/resistance as a zone rather than a precise line will match reality much better than an overly precise line will.",
+      takeaways: [
+        "Support/resistance are zones where reactions become more likely, not guaranteed floors or ceilings",
+        "Round numbers and prior highs/lows are the most common support/resistance levels on gold",
+        "A broken resistance level often becomes new support, and vice versa"
+      ],
+      quiz: [
+        { q: "Support is best described as:", options: ["A level price has trouble falling below", "A level price always breaks", "A random price"], correct: 0 },
+        { q: "When resistance is broken, it often becomes:", options: ["Irrelevant going forward", "New support", "A guaranteed reversal point"], correct: 1 }
+      ]}
   ]},
   { phase: "Month 2 — One Strategy, Deep", weeks: [
     { id: "w5", title: "Choosing Your Strategy", summary: "Pick one framework and write it down as explicit rules.", badge: "intermediate",
@@ -914,6 +1047,7 @@ const thumbColors = ["#7a5230","#12202b","#3a2f22","#2b2416"];
 function goto(id) {
   if (id === "landing") { showPage("landing"); updateNavCurrent("landing"); window.scrollTo(0,0); return; }
   if (id === "about") { showPage("about"); updateNavCurrent("about"); window.scrollTo(0,0); return; }
+  if (id === "glossary") { showPage("glossary"); updateNavCurrent("glossary"); renderGlossary(); window.scrollTo(0,0); return; }
   showPage("app");
   updateNavCurrent(id === "dashboard" ? "learn" : navKeyForWeek(id));
   if (id === "dashboard") currentView = { type: "dashboard" };
@@ -941,9 +1075,45 @@ function showPage(page) {
   document.querySelector('[data-page="landing"]').style.display = page === "landing" ? "" : "none";
   document.querySelector('[data-page="app"]').style.display = page === "app" ? "grid" : "none";
   document.querySelector('[data-page="about"]').style.display = page === "about" ? "block" : "none";
+  document.querySelector('[data-page="glossary"]').style.display = page === "glossary" ? "block" : "none";
 }
 
-/* ---------- Landing dynamic grids ---------- */
+/* ---------- Glossary ---------- */
+const GLOSSARY_TERMS = [
+  { term: "XAU/USD", def: "The ticker for spot gold priced in US dollars — the price of one troy ounce of gold. 'XAU' comes from the Latin 'aurum' (gold)." },
+  { term: "Pip", def: "The smallest standard price move in a quote. On XAU/USD, most platforms treat a $0.01 move as a pip, though conventions vary by broker." },
+  { term: "Point", def: "A $1.00 move in gold's price. On XAU/USD, one point equals 100 pips on most platforms." },
+  { term: "Spread", def: "The gap between the buy (ask) price and sell (bid) price — effectively the cost of entering a trade, paid to the broker." },
+  { term: "Leverage", def: "Borrowed capital that lets a trader control a larger position than their account balance alone would allow. Amplifies both gains and losses." },
+  { term: "Margin", def: "The amount of your own capital a broker requires you to set aside to open a leveraged position." },
+  { term: "Lot", def: "A standardized trade size. A standard lot is typically 100 ounces of gold; mini and micro lots are fractions of that." },
+  { term: "Liquidity", def: "How easily an asset can be bought or sold without significantly moving its price. Gold is generally highly liquid during major sessions." },
+  { term: "Volatility", def: "How much and how quickly price moves over a given period. Higher volatility means bigger price swings in both directions." },
+  { term: "Market Structure", def: "The overall pattern of highs and lows on a chart, used to identify whether a market is trending up, down, or ranging sideways." },
+  { term: "Support", def: "A price level where an asset has historically had difficulty falling below, often because buying interest increases there." },
+  { term: "Resistance", def: "A price level where an asset has historically had difficulty rising above, often because selling interest increases there." },
+  { term: "Breakout", def: "When price moves decisively beyond a support or resistance level, often signaling the start of a new directional move." },
+  { term: "Pullback", def: "A temporary price move against the prevailing trend, before the trend resumes." },
+  { term: "Retest", def: "When price returns to a broken support/resistance level (or a prior high/low) to 'test' it again before continuing its move." },
+  { term: "Stop Loss", def: "A predetermined price at which a trade automatically closes to limit further losses." },
+  { term: "Take Profit", def: "A predetermined price at which a trade automatically closes to lock in gains." },
+  { term: "Risk/Reward", def: "The ratio between how much you're risking on a trade versus how much you stand to gain if it works out." },
+  { term: "Drawdown", def: "The decline in account value from a previous peak, usually expressed as a percentage. A key measure of risk exposure over time." },
+  { term: "EMA (Exponential Moving Average)", def: "A trend-following indicator that averages recent prices, weighting the most recent data more heavily than older data." },
+  { term: "MACD", def: "Moving Average Convergence Divergence — an indicator that shows the relationship between two moving averages, often used to gauge momentum." }
+];
+
+function renderGlossary(filter) {
+  const container = document.getElementById("glossary-list");
+  if (!container) return;
+  const q = (filter || "").toLowerCase();
+  const filtered = GLOSSARY_TERMS.filter(t => t.term.toLowerCase().includes(q) || t.def.toLowerCase().includes(q));
+  container.innerHTML = filtered.length
+    ? filtered.map(t => `<div class="glossary-item"><div class="glossary-term">${t.term}</div><div class="glossary-def">${t.def}</div></div>`).join("")
+    : `<div class="empty-state">No terms match "${filter}".</div>`;
+}
+
+
 function renderLandingGrids() {
   const pathIds = ["w1","w3","w7","w11"];
   document.getElementById("path-grid").innerHTML = pathIds.map((id,i) => {
@@ -1341,21 +1511,49 @@ function initNewsSidebar() {
     tab.classList.remove("hidden");
     tab.setAttribute("aria-expanded", "false");
   }
-  tab.addEventListener("click", open);
+  tab.addEventListener("click", (e) => { e.stopPropagation(); open(); });
   closeBtn.addEventListener("click", close);
+
+  // click anywhere outside the panel (or press Escape) collapses it
+  document.addEventListener("click", (e) => {
+    if (sidebar.classList.contains("open") && !sidebar.contains(e.target) && e.target !== tab) {
+      close();
+    }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && sidebar.classList.contains("open")) close();
+  });
 
   initFunFacts();
   loadGoldNews();
+}
+
+function initChatbotButton() {
+  const btn = document.getElementById("chatbot-btn");
+  const panel = document.getElementById("chatbot-panel");
+  const closeBtn = document.getElementById("chatbot-close");
+  if (!btn || !panel) return;
+  function open() { panel.classList.add("open"); btn.setAttribute("aria-expanded", "true"); }
+  function close() { panel.classList.remove("open"); btn.setAttribute("aria-expanded", "false"); }
+  btn.addEventListener("click", (e) => { e.stopPropagation(); open(); });
+  closeBtn.addEventListener("click", close);
+  document.addEventListener("click", (e) => {
+    if (panel.classList.contains("open") && !panel.contains(e.target) && e.target !== btn) close();
+  });
 }
 
 /* ---------- Init ---------- */
 const footerYearEl = document.getElementById("footer-year");
 if (footerYearEl) footerYearEl.textContent = new Date().getFullYear();
 
+const glossarySearchEl = document.getElementById("glossary-search");
+if (glossarySearchEl) glossarySearchEl.addEventListener("input", (e) => renderGlossary(e.target.value));
+
 renderLandingGrids();
 initHeroTypewriter();
 initMobileMenu();
 initNewsSidebar();
+initChatbotButton();
 renderSession();
 setInterval(renderSession, 60000);
 document.querySelectorAll("[data-goto]").forEach(el => {
