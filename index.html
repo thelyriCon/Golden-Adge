@@ -49,7 +49,13 @@
     line-height: 1.55;
     position: relative;
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
   }
+  .page-shell { flex: 1 0 auto; display: flex; flex-direction: column; }
+  .page-shell > [data-page] { flex: 1 0 auto; }
+  .site-footer { flex-shrink: 0; }
 
   /* soft blurred color blobs behind content for depth — the glassmorphism backdrop */
   .bg-blob {
@@ -77,17 +83,20 @@
     font-size: 14px;
   }
   .btn-primary {
-    background: #100e09;
-    color: #e9c165;
+    background: #0d0b08;
+    color: #ffffff;
     padding: 12px 22px;
     font-weight: 700;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    border: 1px solid rgba(233,193,101,0.35);
+    border: 1px solid rgba(255,255,255,0.15);
     box-shadow: 0 6px 20px -8px rgba(0,0,0,0.5);
+    white-space: nowrap;
+    flex-shrink: 0;
+    cursor: pointer;
   }
-  .btn-primary:hover { background: #1c1912; color: #f3dfa0; }
+  .btn-primary:hover { background: #1c1912; }
   button:focus-visible, a:focus-visible, [tabindex]:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
@@ -98,6 +107,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 14px;
     padding: 16px 48px;
     background: var(--glass-bg-strong);
     backdrop-filter: blur(20px) saturate(160%);
@@ -107,28 +117,89 @@
     top: 0;
     z-index: 20;
   }
-  .site-brand { display: flex; align-items: center; gap: 10px; }
-  .site-brand .logo-img { height: 34px; width: auto; display: none; } /* switches on once a logo is uploaded — see JS */
+  .site-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .site-brand .logo-img { height: 34px; width: auto; display: none; flex-shrink: 0; } /* switches on once a logo is uploaded — see JS */
   .site-brand .mark {
     width: 34px; height: 34px;
     display: flex; align-items: end; gap: 2px;
     padding: 6px 5px;
+    flex-shrink: 0;
   }
   .site-brand .mark span { width: 5px; background: var(--accent); border-radius: 1px; }
   .site-brand .mark span:nth-child(1) { height: 40%; }
   .site-brand .mark span:nth-child(2) { height: 70%; }
   .site-brand .mark span:nth-child(3) { height: 100%; }
-  .site-brand .names { line-height: 1.15; }
-  .site-brand h1 { font-size: 20px; font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 0.01em; }
+  .site-brand .names { line-height: 1.15; white-space: nowrap; }
+  .site-brand h1 { font-size: 20px; font-family: 'Poppins', sans-serif; font-weight: 800; letter-spacing: 0.01em; white-space: nowrap; }
 
-  .nav-links { display: flex; align-items: center; gap: 20px; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 600; color: var(--accent-dark); }
-  .nav-links a { white-space: normal; flex-shrink: 0; display: flex; align-items: center; text-align: center; line-height: 1.35; }
+  .nav-links { display: flex; align-items: center; gap: 24px; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 600; color: var(--accent-dark); flex-shrink: 1; min-width: 0; }
+  .nav-links a { white-space: nowrap; flex-shrink: 0; display: flex; align-items: center; cursor: pointer; }
   .nav-links a:hover { color: var(--accent); }
   .nav-links a.current { color: var(--text); position: relative; }
   .nav-links a.current::after {
     content: ''; position: absolute; bottom: -20px; left: 0; right: 0; height: 2px; background: var(--accent);
   }
 
+  .nav-item-hover { position: relative; }
+  .nav-dropdown {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    box-shadow: var(--glass-shadow);
+    padding: 12px;
+    min-width: 190px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) translateY(-6px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 30;
+  }
+  .nav-item-hover:hover .nav-dropdown { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+  .nav-dropdown a { text-transform: none; letter-spacing: normal; font-weight: 500; color: var(--text-muted); padding: 7px 8px; border-radius: 6px; white-space: nowrap; }
+  .nav-dropdown a:hover { background: var(--accent-soft); color: var(--accent-dark); }
+  .nav-dropdown-desc { font-size: 11px; text-transform: none; letter-spacing: normal; font-weight: 400; color: var(--text-faint); padding: 2px 8px 8px; border-bottom: 1px solid var(--glass-border); margin-bottom: 4px; }
+
+  .nav-hover-desc {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-4px);
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 11px;
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: 400;
+    color: var(--text-muted);
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 30;
+  }
+  .nav-item-hover:hover .nav-hover-desc { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 1024px) {
+    .site-nav { padding: 14px 24px; gap: 10px; }
+    .nav-links { gap: 14px; font-size: 11px; }
+    .btn-primary { padding: 10px 16px; font-size: 13px; }
+  }
+  @media (max-width: 900px) {
+    .nav-links { gap: 10px; }
+    .site-brand h1 { font-size: 18px; }
+  }
   @media (max-width: 820px) { .nav-links { display: none; } }
 
   /* Hamburger + mobile menu */
@@ -185,6 +256,7 @@
     align-items: center;
     overflow: hidden;
     margin-bottom: 8px;
+    background: linear-gradient(120deg, #1c1712, #35281a 60%, #2a2015); /* visible even if the image fails to load */
   }
   .hero-bg-img {
     position: absolute; inset: 0;
@@ -327,15 +399,30 @@
   .chip-3 .v { font-size: 13px; line-height: 1.3; }
 
   .hero-chip-row { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
-  .chip-inline { position: static; background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.22); }
+  .hero-chips-panel {
+    position: absolute;
+    z-index: 3;
+    right: 48px;
+    bottom: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  .chip-inline { position: static; background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.22); min-width: 130px; }
   .chip-inline .k { color: rgba(243,238,224,0.55); }
   .chip-inline .v { color: #e9c165; }
   .chip-inline .chip-note { color: rgba(243,238,224,0.4); }
+  @media (max-width: 760px) {
+    .hero-chips-panel { position: static; flex-direction: row; align-items: stretch; margin: 20px 22px 0; }
+    .chip-inline { min-width: 0; flex: 1; }
+  }
 
   @media (prefers-reduced-motion: reduce) { .gold-bar { animation: none; } }
 
   @media (max-width: 860px) {
-    .hero-content { padding: 36px 22px; }
+    .hero-content { padding: 36px 22px 16px; }
+    .hero { min-height: 0; overflow: visible; padding-bottom: 16px; }
     .hero h2 { font-size: 32px; }
   }
 
@@ -354,7 +441,10 @@
 
   /* Three feature cards */
   .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .feature-section { position: relative; z-index: 4; margin-top: -48px; padding-top: 0; }
+  @media (max-width: 760px) { .feature-section { margin-top: -28px; } }
   .feature-card {
+    cursor: pointer;
     background: var(--glass-bg);
     backdrop-filter: blur(16px) saturate(160%);
     -webkit-backdrop-filter: blur(16px) saturate(160%);
@@ -385,6 +475,7 @@
   /* Learning path cards */
   .path-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
   .path-card {
+    cursor: pointer;
     background: var(--glass-bg);
     backdrop-filter: blur(16px) saturate(160%);
     -webkit-backdrop-filter: blur(16px) saturate(160%);
@@ -493,7 +584,7 @@
     font-size: 13px;
     font-weight: 600;
   }
-  .float-btn:hover, .news-tab:hover, .chatbot-btn:hover { padding: 13px 18px 13px 13px; background: rgba(255,255,255,0.5); }
+  .float-btn:hover, .news-tab:hover, .chatbot-btn:hover { padding: 13px 18px 13px 13px; background: rgba(255,255,255,0.5); z-index: 110; }
   .float-btn:hover .label, .news-tab:hover .label, .chatbot-btn:hover .label { max-width: 160px; opacity: 1; margin-left: 8px; }
   .float-btn svg, .news-tab svg, .chatbot-btn svg { flex-shrink: 0; width: 20px; height: 20px; }
   .news-tab.hidden { display: none; }
@@ -591,6 +682,39 @@
   .glossary-item { padding: 14px 4px; border-bottom: 1px solid var(--glass-border); }
   .glossary-term { font-weight: 700; color: var(--accent-dark); margin-bottom: 4px; }
   .glossary-def { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+  .glossary-external-btn {
+    margin-top: 14px;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--accent-dark);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .glossary-external-btn:hover { background: var(--accent-soft); }
+  .external-badge { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-faint); font-weight: 500; margin-top: 4px; }
+  .external-result { margin-top: 10px; border-left: 2px solid var(--accent-dark); padding-left: 12px; }
+
+  .gloss-term { text-decoration: underline dotted; text-decoration-color: var(--accent); text-underline-offset: 3px; cursor: help; }
+  .gloss-tooltip {
+    position: absolute;
+    max-width: 240px;
+    background: var(--glass-bg-strong);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    box-shadow: var(--glass-shadow);
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+    z-index: 200;
+    display: none;
+  }
+  .gloss-tooltip.open { display: block; }
 
   /* ================= APP (dashboard / lesson) — reused, re-themed light ================= */
   .app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
@@ -630,7 +754,7 @@
   .stat-box .label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
   .stat-box .value { font-size: 22px; color: var(--accent-dark); }
 
-  .module-row { display: flex; align-items: center; gap: 16px; padding: 13px 4px; border-bottom: 1px solid var(--border); }
+  .module-row { display: flex; align-items: center; gap: 16px; padding: 13px 4px; border-bottom: 1px solid var(--border); cursor: pointer; }
   .module-row .wk { font-family: 'IBM Plex Mono', monospace; color: var(--text-faint); font-size: 13px; width: 22px; }
   .module-row .title { flex: 1; }
   .module-row .m-name { font-size: 15px; }
@@ -705,7 +829,7 @@
 
 <!-- ================= PERSISTENT SITE NAV (all pages) ================= -->
 <nav class="site-nav">
-  <div class="site-brand">
+  <div class="site-brand" data-goto="landing" data-navkey="landing" style="cursor:pointer;">
     <img class="logo-img" id="brand-logo" src="logo.png" alt="Golden Edge logo"
          onerror="this.style.display='none'"
          onload="this.style.display='block'; document.getElementById('brand-mark').style.display='none';">
@@ -714,14 +838,24 @@
   </div>
   <div class="nav-links">
     <a class="current" data-goto="landing" data-navkey="landing">Home</a>
-    <a data-goto="dashboard" data-navkey="learn">Lessons</a>
-    <a data-goto="w1" data-navkey="market">Market<br>Basics</a>
-    <a data-goto="w3" data-navkey="technical">Technical<br>Analysis</a>
-    <a data-goto="w9" data-navkey="risk">Risk<br>Management</a>
-    <a data-goto="w10" data-navkey="journal">Trading<br>Journal</a>
-    <a data-goto="glossary" data-navkey="glossary">Glossary</a>
+    <div class="nav-item-hover">
+      <a data-goto="dashboard" data-navkey="learn">Lessons</a>
+      <div class="nav-dropdown">
+        <div class="nav-dropdown-desc">The structured gold-trading curriculum — every module and lesson.</div>
+        <a data-goto="w1" data-navkey="market">Market Basics</a>
+        <a data-goto="w3" data-navkey="technical">Technical Analysis</a>
+        <a data-goto="w9" data-navkey="risk">Risk Management</a>
+        <a data-goto="w10" data-navkey="journal">Trading Journal</a>
+      </div>
+    </div>
+    <div class="nav-item-hover">
       <a data-goto="glossary" data-navkey="glossary">Glossary</a>
-  <a data-goto="about" data-navkey="about">About</a>
+      <div class="nav-hover-desc">Look up trading terminology in plain language.</div>
+    </div>
+    <div class="nav-item-hover">
+      <a data-goto="about" data-navkey="about">About</a>
+      <div class="nav-hover-desc">Why Golden Edge exists, and who built it.</div>
+    </div>
   </div>
   <button class="btn-primary" data-goto="dashboard">Start Learning</button>
   <button class="hamburger-btn" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
@@ -735,32 +869,36 @@
   <a data-goto="w3" data-navkey="technical">Technical Analysis</a>
   <a data-goto="w9" data-navkey="risk">Risk Management</a>
   <a data-goto="w10" data-navkey="journal">Trading Journal</a>
+  <a data-goto="glossary" data-navkey="glossary">Glossary</a>
   <a data-goto="about" data-navkey="about">About</a>
   <button class="btn-primary" data-goto="dashboard">Start Learning</button>
 </div>
+
+<!-- ================= PAGE SHELL (keeps footer pinned to bottom on short pages) ================= -->
+<div class="page-shell">
 
 <!-- ================= LANDING PAGE ================= -->
 <div data-page="landing">
 
 
   <section class="hero">
-    <img class="hero-bg-img" src="images/hero-chart.jpg" alt="" onerror="this.style.display='none'">
+    <img class="hero-bg-img" src="images/hero-chart.jpg" alt="" onerror="this.style.display='none'; console.warn('Hero image failed to load — check that images/hero-chart.jpg exists at exactly that path/case in the repo.');">
     <div class="hero-scrim"></div>
     <div class="hero-content">
       <div class="hero-eyebrow">LEARN &nbsp;/&nbsp; PRACTICE &nbsp;/&nbsp; GROW</div>
       <h2 class="hero-headline"><span class="fixed-text">LEARN TO&hellip;</span><span class="animated-wrap"><span id="typewriter-text" class="animated-text"></span><span class="type-cursor" aria-hidden="true"></span></span></h2>
       <p class="lead" style="margin-bottom:26px;">A structured study platform for learning XAU/USD, market structure, technical analysis, risk management and trading psychology &mdash; one instrument, mastered in depth.</p>
       <button class="btn-primary" data-goto="dashboard">Start Learning &nbsp;→</button>
+    </div>
 
-      <div class="hero-chip-row">
-        <div class="glass-chip chip-inline"><div class="k">XAU/USD</div><div class="v num">2,486.30</div><div class="chip-note">sample data</div></div>
-        <div class="glass-chip chip-inline"><div class="k">TODAY</div><div class="v num" style="color:#7fce9e">+0.62%</div><div class="chip-note">sample data</div></div>
-        <div class="glass-chip chip-inline"><div class="k">SESSION</div><div class="v" id="session-value">—</div></div>
-      </div>
+    <div class="hero-chips-panel">
+      <div class="glass-chip chip-inline"><div class="k">XAU/USD</div><div class="v num">2,486.30</div><div class="chip-note">sample data</div></div>
+      <div class="glass-chip chip-inline"><div class="k">TODAY</div><div class="v num" style="color:#7fce9e">+0.62%</div><div class="chip-note">sample data</div></div>
+      <div class="glass-chip chip-inline"><div class="k">SESSION</div><div class="v" id="session-value">—</div></div>
     </div>
   </section>
 
-  <section class="section">
+  <section class="section feature-section">
     <div class="feature-grid">
       <div class="feature-card" data-goto="w1">
         <div class="feature-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="14" width="4" height="7"/><rect x="10" y="9" width="4" height="12"/><rect x="17" y="4" width="4" height="17"/></svg></div>
@@ -846,6 +984,8 @@
   <nav class="app-sidebar" id="sidebar"></nav>
   <main class="app-main" id="main"></main>
 </div>
+
+</div><!-- /.page-shell -->
 
 <!-- ================= FOOTER (all pages) ================= -->
 <footer class="site-footer">
@@ -1009,14 +1149,70 @@ const CURRICULUM = [
       ]}
   ]},
   { phase: "Month 2 — One Strategy, Deep", weeks: [
-    { id: "w5", title: "Choosing Your Strategy", summary: "Pick one framework and write it down as explicit rules.", badge: "intermediate",
-      content: "Placeholder lesson content. This week is about selecting a single strategy approach and defining exact, written entry/exit rules — no ambiguity.", quiz: [] },
-    { id: "w6", title: "Backtesting Fundamentals", summary: "Testing your rules against historical charts before risking money.", badge: "intermediate",
-      content: "Placeholder lesson content. This week covers how to backtest manually on historical gold charts and log results.", quiz: [] },
-    { id: "w7", title: "Price Action", summary: "Focus on candlestick patterns, rejection zones and reaction at key levels.", badge: "intermediate",
-      content: "Placeholder lesson content.", quiz: [] },
-    { id: "w8", title: "Refining Through Repetition", summary: "Iterating on the strategy using backtest data.", badge: "intermediate",
-      content: "Placeholder lesson content.", quiz: [] }
+    { id: "w5", title: "Choosing Your Strategy", summary: "Pick one framework and write it down as explicit rules.", badge: "intermediate", estMinutes: 20,
+      whatYoullLearn: [
+        "Why picking one strategy framework beats hopping between many",
+        "The components every trading strategy needs to define",
+        "How to turn a vague idea into an explicit, written rule set"
+      ],
+      content: "With market structure, candlesticks, and support/resistance covered, the next step is choosing one approach and committing to it long enough to actually test it — not searching for 'the best' strategy, since no single universally-best answer exists. <br><br>A complete strategy needs to define, in writing: the <strong>setup</strong> (what condition must be true before you even consider a trade — e.g. price approaching a marked support level during the London/New York overlap), the <strong>entry trigger</strong> (the exact signal that tells you to enter, such as a rejection candle closing back above the level), the <strong>stop-loss rule</strong> (where you're proven wrong), and the <strong>exit rule</strong> (where you take profit, or what would make you exit early). <br><br>Writing these as literal if-then statements — rather than a general feeling like 'I look for good support and resistance setups' — matters because vague rules can't be tested or improved. If you can't write down exactly what would make you take a trade, you can't check afterward whether you actually followed your own plan, and you can't backtest something you haven't precisely defined. This week's job isn't to hand you a finished strategy; it's to get one specific, written framework down on paper (even a simple one) that Month 2's remaining weeks can actually test and refine.",
+      takeaways: [
+        "A strategy must define setup, entry trigger, stop-loss, and exit — vague intuition can't be tested",
+        "Committing to one approach long enough to evaluate it beats hopping between many",
+        "The goal here isn't finding 'the best' strategy — it's making one specific enough to test"
+      ],
+      quiz: [
+        { q: "Why is switching strategies frequently a problem for a beginner?", options: ["You never gather enough data on any one approach to know if it works", "It guarantees losses", "It's not allowed by brokers"], correct: 0 },
+        { q: "A complete strategy definition must include at minimum:", options: ["Only an entry signal", "Setup conditions, entry trigger, stop-loss, and exit rule", "A guaranteed win rate"], correct: 1 }
+      ]},
+    { id: "w6", title: "Backtesting Fundamentals", summary: "Testing your rules against historical charts before risking money.", badge: "intermediate", estMinutes: 20,
+      whatYoullLearn: [
+        "What backtesting is and why it comes before risking real money",
+        "How to manually backtest a strategy on historical gold charts",
+        "What to record so your results are actually meaningful"
+      ],
+      content: "Backtesting means testing your written strategy rules against historical price data to see how they would have performed, without risking anything. For a beginner, manual backtesting — scrolling back on a chart and mentally 'playing it forward' one candle at a time — is more valuable early on than automated software, because it forces you to apply your rules literally, which quickly reveals ambiguity you didn't notice when the rules were just an idea in your head. <br><br>The process: pick a past date range, cover up the candles ahead of your current point (so hindsight doesn't quietly bias your decisions), move forward one candle at a time, and apply your exact rule set — did the setup occur? Did the entry trigger fire? Where would the stop and exit have landed? Record the outcome each time, whether it was a win or a loss. <br><br>A handful of examples isn't a sample — three or four trades can go either way purely by chance. Aim for dozens of instances of your setup before drawing any real conclusion about how it tends to behave. Backtesting on past data never guarantees future results, but it reveals ambiguity in your own rules and gives you a rough sense of how often the setup actually occurs and how it's tended to resolve — essential information before ever trading it live or even on demo.",
+      takeaways: [
+        "Backtesting means manually applying your rules to past charts, revealing rule ambiguity that just watching charts doesn't show",
+        "Cover the candles ahead of your test point so hindsight doesn't bias the outcome",
+        "A handful of trades isn't a sample — aim for dozens of instances before drawing conclusions"
+      ],
+      quiz: [
+        { q: "Why cover the candles ahead of your current test point while backtesting?", options: ["To prevent hindsight bias from influencing your decision", "It's not necessary", "To make the chart look nicer"], correct: 0 },
+        { q: "A reasonable backtest sample size before drawing conclusions is:", options: ["3-4 trades", "Dozens of instances", "One"], correct: 1 }
+      ]},
+    { id: "w7", title: "Price Action", summary: "Reading rejections and clean breaks at the key levels you've already marked.", badge: "intermediate", estMinutes: 18,
+      whatYoullLearn: [
+        "What a genuine 'rejection' at a level looks like on the chart",
+        "How to tell a rejection apart from a clean break using candle shape",
+        "A simple, repeatable habit for reading price reactions at levels"
+      ],
+      content: "This week connects Weeks 3 and 4: candlestick reading and support/resistance. Marking a level is only half the job — the more useful skill is reading how price actually behaves when it reaches one. <br><br>A <strong>rejection</strong> shows up as a candle with a long wick and a small body in the direction price was pushed back from — a long lower wick at support suggests sellers tried to push through but buyers took control before the close, and the level held. A <strong>clean break</strong> looks different: a candle (or run of candles) with a large body and little wick pushing straight through the level, suggesting conviction rather than a fight. Between the two sits <strong>churn</strong> — several small, indecisive candles at a level with no clear resolution either way, which is itself useful information (neither side has won yet). <br><br>Build the habit of asking, every time price reaches a level you've marked: did it reject cleanly, break cleanly, or churn? The size and shape of that reaction usually carries more information than the level itself did in the first place — this habit of reading reactions, repeated over time, is most of what 'price action trading' actually means in practice.",
+      takeaways: [
+        "A rejection shows as a long wick + small body in the rejected direction",
+        "A clean break shows as a large body pushing through with little wick",
+        "Reading how price reacts at a level matters more than the level itself"
+      ],
+      quiz: [
+        { q: "A long wick with a small body at a support level most likely suggests:", options: ["A clean break is imminent", "A rejection — the level held", "Nothing meaningful"], correct: 1 },
+        { q: "A candle with a large body and little wick pushing through resistance suggests:", options: ["Rejection", "Indecision", "Conviction / a clean break"], correct: 2 }
+      ]},
+    { id: "w8", title: "Refining Through Repetition", summary: "Reviewing backtest data to improve your strategy methodically.", badge: "intermediate", estMinutes: 18,
+      whatYoullLearn: [
+        "How to review a batch of backtested trades to spot real patterns",
+        "The difference between refining a strategy and abandoning it after a losing streak",
+        "Why changing one variable at a time is the only way to know what actually helped"
+      ],
+      content: "After backtesting a meaningful sample (Week 6), the next step is reviewing it honestly for patterns. Did your losing instances share something in common — taken against the higher-timeframe trend, taken outside the London/New York overlap, entered without waiting for a clean rejection (Week 7)? Did winners cluster around specific conditions? None of this is visible without written records, which is why the trade journal introduced next week matters so much. <br><br>When refining rules based on what you find, change <strong>one variable at a time</strong> and re-test — for example, only trading the setup during the session overlap — rather than adjusting several rules simultaneously. Changing everything at once makes it impossible to know which change actually caused any improvement (or made things worse). <br><br>Just as important: don't abandon a strategy entirely after a short losing streak. A strategy with a genuine statistical edge can still lose several times in a row purely due to normal variance — that's not proof it's broken. Jumping to a different strategy after every rough patch is exactly the pattern this platform exists to break. The goal this week is building the discipline to refine methodically, rather than restart from scratch every time results dip.",
+      takeaways: [
+        "Review your backtest sample for shared traits among winners and among losers",
+        "Change one variable at a time when refining, so you know what caused any improvement",
+        "A losing streak doesn't automatically mean a strategy is broken — variance is normal even with a real edge"
+      ],
+      quiz: [
+        { q: "When refining a strategy based on backtest results, you should:", options: ["Change many rules at once to fix things faster", "Change one variable at a time and re-test", "Never change anything"], correct: 1 },
+        { q: "A short losing streak on a properly tested strategy:", options: ["Always means the strategy is broken and must be abandoned", "Can happen due to normal variance even with a real edge", "Is impossible if the strategy works"], correct: 1 }
+      ]}
   ]},
   { phase: "Month 3 — Execution & Discipline", weeks: [
     { id: "w9", title: "Risk Management", summary: "Position sizing, stop placement, and risk-per-trade rules.", badge: "progress",
@@ -1106,13 +1302,94 @@ const GLOSSARY_TERMS = [
 function renderGlossary(filter) {
   const container = document.getElementById("glossary-list");
   if (!container) return;
-  const q = (filter || "").toLowerCase();
+  const q = (filter || "").toLowerCase().trim();
   const filtered = GLOSSARY_TERMS.filter(t => t.term.toLowerCase().includes(q) || t.def.toLowerCase().includes(q));
-  container.innerHTML = filtered.length
-    ? filtered.map(t => `<div class="glossary-item"><div class="glossary-term">${t.term}</div><div class="glossary-def">${t.def}</div></div>`).join("")
-    : `<div class="empty-state">No terms match "${filter}".</div>`;
+  if (filtered.length) {
+    container.innerHTML = filtered.map(t => `<div class="glossary-item"><div class="glossary-term">${t.term}</div><div class="glossary-def">${t.def}</div></div>`).join("");
+  } else if (q) {
+    container.innerHTML = `
+      <div class="empty-state">No Golden Edge term matches "${filter}".</div>
+      <button id="external-lookup-btn" class="glossary-external-btn">Look up "${filter}" in a general dictionary →</button>
+      <div id="external-lookup-result"></div>`;
+    document.getElementById("external-lookup-btn").addEventListener("click", () => lookupExternalDefinition(filter.trim()));
+  } else {
+    container.innerHTML = `<div class="empty-state">Start typing to search.</div>`;
+  }
 }
 
+async function lookupExternalDefinition(word) {
+  const resultEl = document.getElementById("external-lookup-result");
+  if (!resultEl) return;
+  resultEl.innerHTML = `<div class="empty-state">Looking up "${word}"…</div>`;
+  try {
+    const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
+    if (!res.ok) throw new Error("not found");
+    const data = await res.json();
+    const def = data[0]?.meanings?.[0]?.definitions?.[0]?.definition;
+    if (!def) throw new Error("no definition");
+    resultEl.innerHTML = `
+      <div class="glossary-item external-result">
+        <div class="glossary-term">${data[0].word} <span class="external-badge">external — general dictionary, not Golden Edge curriculum</span></div>
+        <div class="glossary-def">${def}</div>
+      </div>`;
+  } catch (e) {
+    resultEl.innerHTML = `<div class="empty-state">No definition found for "${word}" — it may be specialized trading jargon this general dictionary doesn't cover.</div>`;
+  }
+}
+
+/* ---------- Contextual glossary terms inside lesson text ---------- */
+// Only meaningful trading terms get highlighted — never ordinary words.
+const LESSON_GLOSSARY_KEYWORDS = [
+  "XAU/USD", "Support", "Resistance", "Liquidity", "Volatility", "Spread", "Leverage",
+  "Margin", "Market structure", "Breakout", "Retest", "Risk/Reward", "Stop-loss", "Stop loss",
+  "Take profit", "Pullback", "Drawdown", "Lot"
+];
+
+function linkGlossaryTerms(html) {
+  const used = new Set();
+  // process only text runs, never touch existing HTML tags (e.g. <strong>, <br>)
+  return html.replace(/(<[^>]+>)|([^<]+)/g, (match, tag, text) => {
+    if (tag) return tag;
+    let result = text;
+    LESSON_GLOSSARY_KEYWORDS.forEach(keyword => {
+      const key = keyword.toLowerCase();
+      if (used.has(key)) return;
+      const entry = GLOSSARY_TERMS.find(t => t.term.toLowerCase() === key || t.term.toLowerCase().startsWith(key));
+      if (!entry) return;
+      const escaped = keyword.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&");
+      const re = new RegExp("\\b(" + escaped + ")\\b", "i");
+      if (re.test(result)) {
+        result = result.replace(re, `<span class="gloss-term" data-def="${entry.def.replace(/"/g,'&quot;')}">$1</span>`);
+        used.add(key);
+      }
+    });
+    return result;
+  });
+}
+
+function initGlossaryTooltips() {
+  let tip = document.getElementById("gloss-tooltip");
+  if (!tip) {
+    tip = document.createElement("div");
+    tip.id = "gloss-tooltip";
+    tip.className = "gloss-tooltip";
+    document.body.appendChild(tip);
+  }
+  document.addEventListener("click", (e) => {
+    const term = e.target.closest(".gloss-term");
+    if (term) {
+      const rect = term.getBoundingClientRect();
+      tip.innerHTML = `${term.dataset.def} <a data-goto="glossary" style="display:block;margin-top:6px;font-weight:600;color:var(--accent-dark);cursor:pointer;">View full glossary →</a>`;
+      tip.style.left = Math.min(rect.left, window.innerWidth - 260) + "px";
+      tip.style.top = (rect.bottom + window.scrollY + 8) + "px";
+      tip.classList.add("open");
+      const link = tip.querySelector("[data-goto]");
+      if (link) link.addEventListener("click", () => { tip.classList.remove("open"); goto("glossary"); });
+    } else if (!e.target.closest("#gloss-tooltip")) {
+      tip.classList.remove("open");
+    }
+  });
+}
 
 function renderLandingGrids() {
   const pathIds = ["w1","w3","w7","w11"];
@@ -1260,7 +1537,7 @@ function renderLesson(weekId) {
     </div>` : ""}
 
     <div class="placeholder-note">This lesson's main content is a placeholder. The structure — breadcrumb, meta, learning goals, takeaways, knowledge check and next-lesson flow — is fully wired; real content gets filled in module by module.</div>
-    <div class="lesson-body"><p>${week.content}</p></div>
+    <div class="lesson-body"><p>${linkGlossaryTerms(week.content)}</p></div>
 
     ${takeaways ? `
     <div class="takeaways-box">
@@ -1554,6 +1831,7 @@ initHeroTypewriter();
 initMobileMenu();
 initNewsSidebar();
 initChatbotButton();
+initGlossaryTooltips();
 renderSession();
 setInterval(renderSession, 60000);
 document.querySelectorAll("[data-goto]").forEach(el => {
